@@ -14,7 +14,7 @@ public class Floor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKey(KeyCode.RightArrow)){
+        /*if (Input.GetKey(KeyCode.RightArrow)){
             // Rotate everything around the Y axis
             transform.Rotate(Vector3.up, - rotSpeed * Time.deltaTime);
             //Debug.Log("turning");
@@ -22,6 +22,6 @@ public class Floor : MonoBehaviour
         else if (Input.GetKey(KeyCode.LeftArrow)){
             // Rotate CCW around Y-axis
             transform.Rotate(Vector3.up, rotSpeed * Time.deltaTime);
-        }
+        }*/
     }
 }
