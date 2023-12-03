@@ -8,6 +8,7 @@ public class Player : MonoBehaviour
     public bool canRotateRight;
     public bool isGrounded;
     public float jumpForce; // Adjust this value to control jump height
+    public Animator anim;
 
     // Start is called before the first frame update
     void Start()
@@ -15,12 +16,16 @@ public class Player : MonoBehaviour
         canRotateRight = true;
         canRotateLeft = true;
         jumpForce = 100f;
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Grounded: " + isGrounded + " LeftRot: " + canRotateLeft + " RightRot: " + canRotateRight);
+        //Debug.Log("Grounded: " + isGrounded + " LeftRot: " + canRotateLeft + " RightRot: " + canRotateRight);
+        if (anim.GetBool("running") && !anim.GetBool("jumpRunning") && !anim.GetBool("roll") && Input.GetKey(KeyCode.R)){
+            anim.SetTrigger("roll");
+        }
     }
 
     void OnCollisionEnter(Collision collision)
@@ -36,6 +41,8 @@ public class Player : MonoBehaviour
             // Checks if we hit something from below
             if (Physics.Raycast(ray, out hit, 0.7f)){
                 isGrounded = true;
+                anim.SetBool("jump", false);
+                anim.SetBool("jumpRunning", false);
 
                 if (!hit.collider.CompareTag("Block")){
                     // We are not standing on a block
@@ -53,6 +60,9 @@ public class Player : MonoBehaviour
         }
         else {
             isGrounded = true;
+            anim.SetBool("jump", false);
+            anim.SetBool("jumpRunning", false);
+
         }
     }
 
@@ -60,5 +70,7 @@ public class Player : MonoBehaviour
         // Perform a Jump
         GetComponent<Rigidbody>().AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         isGrounded = false;
+        if (anim.GetBool("running")) anim.SetBool("jumpRunning", true);
+        else anim.SetBool("jump", true);
     }
 }
