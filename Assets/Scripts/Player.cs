@@ -30,7 +30,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        Debug.LogWarning("Collision with " + collision.gameObject.tag);
+        //Debug.LogWarning("Collision with " + collision.gameObject.tag);
         if (collision.gameObject.tag == "Block")
         {
             Vector3 shift = new Vector3(0, +0.5f, 0);
@@ -63,6 +63,14 @@ public class Player : MonoBehaviour
             anim.SetBool("jump", false);
             anim.SetBool("jumpRunning", false);
 
+        }
+    }
+
+    void OnCollisionExit(Collision collision)
+    {
+        if (collision.gameObject.tag == "Block"){
+            canRotateLeft = true;
+            canRotateRight = true;
         }
     }
 

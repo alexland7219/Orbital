@@ -54,7 +54,7 @@ public class Level : MonoBehaviour
             player.anim.SetBool("jumpRunning", false);
         }
 
-        if (Input.GetKey(KeyCode.UpArrow) && player.isGrounded){
+        if (Input.GetKey(KeyCode.UpArrow) && player.isGrounded && !player.anim.GetBool("jump") && !player.anim.GetBool("jumpRunning")){
             player.jump();
         }
 
