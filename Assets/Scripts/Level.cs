@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Level : MonoBehaviour
 {
-    public float rotSpeed = 60f;
+    private float rotSpeed = 40f;
     public Player player; // Player is the script attached to the Player object
 
     // Start is called before the first frame update
@@ -15,7 +15,6 @@ public class Level : MonoBehaviour
         }
 
     }
-
 
     // Update is called once per frame
     void Update()
@@ -28,9 +27,9 @@ public class Level : MonoBehaviour
             //Debug.Log("turning");
 
             // Update Y rotation on Samus
-            if (player.transform.localScale.z == -4){
+            if (player.transform.localScale.z < 0){
                 Vector3 newScale = player.transform.localScale;
-                newScale.z = +4;
+                newScale.z = -player.transform.localScale.z;
                 player.transform.localScale = newScale;
             }
         }
@@ -40,9 +39,9 @@ public class Level : MonoBehaviour
             player.canRotateLeft = true;
             player.anim.SetBool("running", true);
 
-            if (player.transform.localScale.z == +4){
+            if (player.transform.localScale.z > 0){
                 Vector3 newScale = player.transform.localScale;
-                newScale.z = -4;
+                newScale.z = -player.transform.localScale.z;
                 player.transform.localScale = newScale;
 
             }
@@ -54,8 +53,9 @@ public class Level : MonoBehaviour
             player.anim.SetBool("jumpRunning", false);
         }
 
-        if (Input.GetKey(KeyCode.UpArrow) && player.isGrounded && !player.anim.GetBool("jump") && !player.anim.GetBool("jumpRunning")){
+        if (Input.GetKey(KeyCode.UpArrow) && player.isGrounded){
             player.jump();
+            player.isGrounded = false;
         }
 
     }

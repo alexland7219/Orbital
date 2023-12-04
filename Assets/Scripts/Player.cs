@@ -9,6 +9,7 @@ public class Player : MonoBehaviour
     public bool isGrounded;
     public float jumpForce; // Adjust this value to control jump height
     public Animator anim;
+    private float canJumpTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -16,15 +17,39 @@ public class Player : MonoBehaviour
         canRotateRight = true;
         canRotateLeft = true;
         jumpForce = 100f;
+        isGrounded = false;
         anim = GetComponent<Animator>();
+        canJumpTimer = 0;
+    }
+
+    private bool checkGrounded(){
+        // Checks if the player is touching ground
+        //Vector3 shift = new Vector3(0, +f, 0);
+
+        Ray ray = new Ray(transform.position, Vector3.down); // Change the direction to Vector3.down
+        RaycastHit hit;
+
+        return Physics.Raycast(ray, out hit, .1f);
     }
 
     // Update is called once per frame
     void Update()
     {
         //Debug.Log("Grounded: " + isGrounded + " LeftRot: " + canRotateLeft + " RightRot: " + canRotateRight);
-        if (anim.GetBool("running") && !anim.GetBool("jumpRunning") && !anim.GetBool("roll") && Input.GetKey(KeyCode.R)){
-            anim.SetTrigger("roll");
+        //if (anim.GetBool("running") && !anim.GetBool("jumpRunning") && !anim.GetBool("roll") && Input.GetKey(KeyCode.R)){
+        //    anim.SetTrigger("roll");
+        //}
+
+        if (canJumpTimer > 0) canJumpTimer -= Time.deltaTime;
+
+        // Check if we are grounded
+        if (!isGrounded && checkGrounded())
+        {
+            // Debug.Log("GROUNDING");
+            // We are grounded
+            isGrounded = true;
+            anim.SetBool("jump", false);
+            anim.SetBool("jumpRunning", false);
         }
     }
 
@@ -33,35 +58,18 @@ public class Player : MonoBehaviour
         //Debug.LogWarning("Collision with " + collision.gameObject.tag);
         if (collision.gameObject.tag == "Block")
         {
-            Vector3 shift = new Vector3(0, +0.5f, 0);
 
-            Ray ray = new Ray(transform.position - shift, Vector3.down); // Change the direction to Vector3.down
-            RaycastHit hit;
+            Vector3 normal = collision.contacts[0].normal;
 
-            // Checks if we hit something from below
-            if (Physics.Raycast(ray, out hit, 0.7f)){
+            if (normal.y == 1)
+            {
+                // Collision has been when falling
                 isGrounded = true;
                 anim.SetBool("jump", false);
                 anim.SetBool("jumpRunning", false);
-
-                if (!hit.collider.CompareTag("Block")){
-                    // We are not standing on a block
-                    if (Input.GetKey(KeyCode.LeftArrow)) canRotateLeft = false;
-                    else if (Input.GetKey(KeyCode.RightArrow)) canRotateRight = false;
-
-                }
             }
-            else {
-                if (Input.GetKey(KeyCode.LeftArrow)) canRotateLeft = false;
-                else if (Input.GetKey(KeyCode.RightArrow)) canRotateRight = false;
-
-            }
-
-        }
-        else {
-            isGrounded = true;
-            anim.SetBool("jump", false);
-            anim.SetBool("jumpRunning", false);
+            else if (normal.z == -1) canRotateLeft = false;
+            else if (normal.z == +1) canRotateRight = false;
 
         }
     }
@@ -72,13 +80,25 @@ public class Player : MonoBehaviour
             canRotateLeft = true;
             canRotateRight = true;
         }
+
+        if (!checkGrounded()) isGrounded = false;
     }
 
     public void jump(){
+        if (canJumpTimer > 0) return;
+
         // Perform a Jump
         GetComponent<Rigidbody>().AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
         isGrounded = false;
+
+        canJumpTimer = 0.5f;
+
         if (anim.GetBool("running")) anim.SetBool("jumpRunning", true);
         else anim.SetBool("jump", true);
+    }
+
+    public float getYpos()
+    {
+        return GetComponent<Transform>().position.y;
     }
 }
