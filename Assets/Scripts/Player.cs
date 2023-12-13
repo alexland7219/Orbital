@@ -7,6 +7,7 @@ public class Player : MonoBehaviour
     public bool canRotateLeft;
     public bool canRotateRight;
     public bool isGrounded;
+    public bool onElevator;
     public float jumpForce; // Adjust this value to control jump height
     public Animator anim;
     private float canJumpTimer;
@@ -18,6 +19,7 @@ public class Player : MonoBehaviour
         canRotateLeft = true;
         jumpForce = 100f;
         isGrounded = false;
+        onElevator = false;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
     }
@@ -74,6 +76,16 @@ public class Player : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Elevator"))
+        {
+            onElevator = true;
+            Debug.Log("Collision player-elevator");
+        }
+
+    }
+
     void OnCollisionExit(Collision collision)
     {
         if (collision.gameObject.tag == "Block"){
@@ -101,4 +113,6 @@ public class Player : MonoBehaviour
     {
         return GetComponent<Transform>().position.y;
     }
+
+    public void releaseFromElevator(){ onElevator = false; }
 }

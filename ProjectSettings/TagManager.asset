@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Floor
   - Block
+  - Elevator
   layers:
   - Default
   - TransparentFX
