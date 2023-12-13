@@ -11,6 +11,8 @@ public class Player : MonoBehaviour
     public float jumpForce; // Adjust this value to control jump height
     public Animator anim;
     private float canJumpTimer;
+    private Vector3 directionToOrigin;
+
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +24,10 @@ public class Player : MonoBehaviour
         onElevator = false;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
+
+        directionToOrigin = Vector3.Normalize(Vector3.zero - transform.position);
+        directionToOrigin.y = 0f;
+
     }
 
     private bool checkGrounded(){
@@ -115,4 +121,6 @@ public class Player : MonoBehaviour
     }
 
     public void releaseFromElevator(){ onElevator = false; }
+
+    public void moveInwards(int inw){ transform.Translate(directionToOrigin * inw * Time.deltaTime); }
 }

@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Elevator : MonoBehaviour
+public class ElevatorV : MonoBehaviour
 {
     private float totalTime; // Seconds
     public Player player; // Player is the script attached to the Player object
