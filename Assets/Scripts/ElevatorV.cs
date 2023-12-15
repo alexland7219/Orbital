@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Transactions;
 using UnityEngine;
 
 public class ElevatorV : MonoBehaviour
@@ -7,12 +8,20 @@ public class ElevatorV : MonoBehaviour
     private float totalTime; // Seconds
     public Player player; // Player is the script attached to the Player object
 
-    public bool activated;
+    public bool player_triggering;
+    public bool moving;
+    public bool started;
+    public bool centered;
+    private Vector3 direction;
     // Start is called before the first frame update
     void Start()
     {
-        activated = false;
+        player_triggering = false;
+        moving = false;
+        centered = false;
+        started = false;
         totalTime = 3.8f;
+        direction = Vector3.up;
 
         if (player == null){
             player = GameObject.FindObjectOfType<Player>();
@@ -23,11 +32,30 @@ public class ElevatorV : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (activated && totalTime >= 0) transform.Translate(Vector3.up * 3 * Time.deltaTime);
-        if (activated) totalTime -= Time.deltaTime;
+        if (player_triggering && Input.GetKey(KeyCode.Space) && totalTime >= 0 && !started && !moving) {
+            player.centerElevator(transform.position);
+            started = true;
+        }
 
-        if (activated && totalTime < 0){
-            activated = false;
+        if (started) centered = player.isCentered(transform.position);
+
+        if (centered && started && !moving) {
+            moving = true;
+            centered = false;
+        }
+
+        if (moving) {
+            transform.Translate(direction * 3 * Time.deltaTime);
+            totalTime -= Time.deltaTime;
+        }
+
+        if (moving && totalTime < 0){
+            Debug.Log("Para de moures");
+            moving = false;
+            started = false;
+            totalTime = 3.8f;
+            if (direction == Vector3.up) direction = Vector3.down;
+            else direction = Vector3.up;
             player.releaseFromElevator();
         }
     }
@@ -35,7 +63,15 @@ public class ElevatorV : MonoBehaviour
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player")){
-            activated = true;
+            player_triggering = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            player_triggering = false;
         }
     }
 

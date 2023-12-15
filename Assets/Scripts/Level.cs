@@ -19,6 +19,8 @@ public class Level : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (player.dirToGo == "left") { transform.Rotate(Vector3.up, -rotSpeed/10.0f * Time.deltaTime); }
+        else if (player.dirToGo == "right") { transform.Rotate(Vector3.up, rotSpeed/10.0f * Time.deltaTime); }
         if (player.canRotateLeft && Input.GetKey(KeyCode.LeftArrow) && !player.onElevator){
             // Rotate everything around the Y axis
             transform.Rotate(Vector3.up, - rotSpeed * Time.deltaTime);

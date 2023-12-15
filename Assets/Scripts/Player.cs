@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using System;
 
 public class Player : MonoBehaviour
 {
@@ -9,6 +11,7 @@ public class Player : MonoBehaviour
     public bool isGrounded;
     public bool onElevator;
     public float jumpForce; // Adjust this value to control jump height
+    public string dirToGo;
     public Animator anim;
     private float canJumpTimer;
     private Vector3 directionToOrigin;
@@ -22,6 +25,7 @@ public class Player : MonoBehaviour
         jumpForce = 100f;
         isGrounded = false;
         onElevator = false;
+        dirToGo = "none";
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
 
@@ -86,8 +90,10 @@ public class Player : MonoBehaviour
     {
         if (other.CompareTag("Elevator"))
         {
-            onElevator = true;
-            Debug.Log("Collision player-elevator");
+            if (Input.GetKey(KeyCode.Space)) {
+                onElevator = true;
+                Debug.Log("Collision player-elevator");
+            }
         }
 
     }
@@ -123,4 +129,24 @@ public class Player : MonoBehaviour
     public void releaseFromElevator(){ onElevator = false; }
 
     public void moveInwards(int inw){ transform.Translate(directionToOrigin * inw * Time.deltaTime); }
+
+    public void centerElevator(Vector3 center) {
+        onElevator = true;
+        Vector3 pos = transform.position;
+        if (center.z > pos.z) dirToGo = "left";
+        else dirToGo = "right";
+        //transform.Translate(directionToOrigin * center * Time.deltaTime);
+    }
+
+    public bool isCentered(Vector3 center)
+    {
+        Vector3 pos = transform.position;
+        Debug.Log("Diferencies " + Math.Abs(center.x - pos.x) + " " + Math.Abs(center.z - pos.z));
+        if ((Math.Abs(center.z - pos.z) < 0.1f)) {
+            dirToGo = "none";
+            return true;
+        }
+        return false;
+        //transform.Translate(directionToOrigin * center * Time.deltaTime);
+    }
 }
