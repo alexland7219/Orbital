@@ -7,6 +7,7 @@ TagManager:
   - Floor
   - Block
   - Elevator
+  - Enemy
   layers:
   - Default
   - TransparentFX

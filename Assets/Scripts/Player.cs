@@ -80,6 +80,12 @@ public class Player : MonoBehaviour
             else if (normal.z == +1) canRotateRight = false;
 
         }
+        else if (collision.gameObject.tag ==  "Enemy")
+        {
+            // Hurt
+            Debug.LogWarning("PLAYER HURT");
+
+        }
     }
 
     void OnTriggerEnter(Collider other)
