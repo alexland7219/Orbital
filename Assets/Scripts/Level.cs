@@ -19,7 +19,7 @@ public class Level : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (player.canRotateLeft && Input.GetKey(KeyCode.LeftArrow) && !player.onElevator){
+        if (player.canRotateLeft && Input.GetKey(KeyCode.LeftArrow) && !player.onElevator && !player.anim.GetBool("shooting")){
             // Rotate everything around the Y axis
             transform.Rotate(Vector3.up, - rotSpeed * Time.deltaTime);
             player.canRotateRight = true;
@@ -33,7 +33,7 @@ public class Level : MonoBehaviour
                 player.transform.localScale = newScale;
             }
         }
-        else if (player.canRotateRight && Input.GetKey(KeyCode.RightArrow) && !player.onElevator){
+        else if (player.canRotateRight && Input.GetKey(KeyCode.RightArrow) && !player.onElevator && !player.anim.GetBool("shooting")){
             // Rotate CCW around Y-axis
             transform.Rotate(Vector3.up, rotSpeed * Time.deltaTime);
             player.canRotateLeft = true;

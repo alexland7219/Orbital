@@ -11,6 +11,7 @@ public class Player : MonoBehaviour
     public float jumpForce; // Adjust this value to control jump height
     public Animator anim;
     private float canJumpTimer;
+    private float canShootTimer;
     private Vector3 directionToOrigin;
 
 
@@ -22,6 +23,7 @@ public class Player : MonoBehaviour
         jumpForce = 100f;
         isGrounded = false;
         onElevator = false;
+        canShootTimer = 1f;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
 
@@ -58,6 +60,17 @@ public class Player : MonoBehaviour
             isGrounded = true;
             anim.SetBool("jump", false);
             anim.SetBool("jumpRunning", false);
+        }
+
+        if (!anim.GetBool("shooting") && Input.GetKey(KeyCode.P)){
+            anim.SetBool("shooting", true);
+        }
+        else if (anim.GetBool("shooting")){
+            canShootTimer -= Time.deltaTime;
+            if (canShootTimer < 0){
+                canShootTimer = 1f;
+                if (!Input.GetKey(KeyCode.P)) anim.SetBool("shooting", false);
+            }
         }
     }
 
