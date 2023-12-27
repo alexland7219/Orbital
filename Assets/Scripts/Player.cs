@@ -13,7 +13,7 @@ public class Player : MonoBehaviour
     private float canJumpTimer;
     private float canShootTimer;
     private Vector3 directionToOrigin;
-
+    public GameObject bulletObject;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
         canShootTimer = 1f;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
+        bulletObject = GameObject.Find("Bullet-template");
 
         directionToOrigin = Vector3.Normalize(Vector3.zero - transform.position);
         directionToOrigin.y = 0f;
@@ -64,6 +65,8 @@ public class Player : MonoBehaviour
 
         if (!anim.GetBool("shooting") && Input.GetKey(KeyCode.P)){
             anim.SetBool("shooting", true);
+            // Shoot
+            shoot();
         }
         else if (anim.GetBool("shooting")){
             canShootTimer -= Time.deltaTime;
@@ -72,6 +75,13 @@ public class Player : MonoBehaviour
                 if (!Input.GetKey(KeyCode.P)) anim.SetBool("shooting", false);
             }
         }
+    }
+
+    void shoot()
+    {
+        // Shoot a bullet
+        GameObject bullet = Instantiate(bulletObject, transform.position, transform.rotation);
+        bullet.transform.parent = GameObject.Find("Level").transform;
     }
 
     void OnCollisionEnter(Collision collision)
