@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -239,6 +239,7 @@ MonoBehaviour:
   isGrounded: 0
   onElevator: 0
   jumpForce: 0
+  dirToGo: 
   anim: {fileID: 0}
   bulletObject: {fileID: 0}
 --- !u!54 &91448699
@@ -313,8 +314,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.52907825, y: 0.5111339, z: 0.30613005}
-  m_Center: {x: -0.009095788, y: 0.23923236, z: -0.0035943985}
+  m_Size: {x: 0.5290782, y: 0.5111339, z: 0.15436509}
+  m_Center: {x: -0.009095791, y: 0.23923236, z: 0.022080574}
 --- !u!1001 &173026002
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1014,8 +1015,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.15747868, y: 2.295793, z: 1}
-  m_Center: {x: 0.39532313, y: 0.64789546, z: -0.0000035004796}
+  m_Size: {x: 0.32116982, y: 2.295793, z: 1}
+  m_Center: {x: -0.010055557, y: 0.64789736, z: -0.0000064815363}
 --- !u!23 &862503553
 MeshRenderer:
   m_ObjectHideFlags: 0
@@ -1036,7 +1037,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: d83829e765089c44c9cf6dbac47bca42, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -1075,7 +1076,7 @@ Transform:
   m_GameObject: {fileID: 862503551}
   serializedVersion: 2
   m_LocalRotation: {x: -0.0009888669, y: 0.2728726, z: -0.0031586008, w: 0.9620446}
-  m_LocalPosition: {x: -1.4574776, y: -1.9117866, z: 2.8999562}
+  m_LocalPosition: {x: -1.458, y: -2.029, z: 2.9}
   m_LocalScale: {x: 1.2, y: 0.5, z: 0.8}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1094,7 +1095,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  activated: 0
+  player_triggering: 0
+  moving: 0
+  started: 0
+  centered: 0
 --- !u!54 &862503557
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -1736,6 +1740,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f2abe986867cbfbad9f26edc3bfeb19c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rotSpeed: 0
 --- !u!54 &1620296281
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -2363,7 +2368,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: d83829e765089c44c9cf6dbac47bca42, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
