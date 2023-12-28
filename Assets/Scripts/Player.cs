@@ -23,7 +23,7 @@ public class Player : MonoBehaviour
         jumpForce = 100f;
         isGrounded = false;
         onElevator = false;
-        canShootTimer = 1f;
+        canShootTimer = 0.3f;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
         bulletObject = GameObject.Find("Bullet-template");
@@ -41,6 +41,11 @@ public class Player : MonoBehaviour
         RaycastHit hit;
 
         return Physics.Raycast(ray, out hit, .1f);
+    }
+
+    public bool lookingLeft(){
+        // Returns true if we are looking to the left
+        return (transform.localScale.z > 0);
     }
 
     // Update is called once per frame
@@ -79,9 +84,14 @@ public class Player : MonoBehaviour
 
     void shoot()
     {
+        if (!anim.GetBool("shooting")) return; // we have to have the shooting animations started
+
         // Shoot a bullet
-        GameObject bullet = Instantiate(bulletObject, transform.position, transform.rotation);
-        bullet.transform.parent = GameObject.Find("Level").transform;
+        Vector3 spawnPosition = transform.position;
+        spawnPosition.y += 1;
+
+        GameObject bullObj = Instantiate(bulletObject, spawnPosition, transform.rotation);
+        bullObj.transform.parent = GameObject.Find("Level").transform;
     }
 
     void OnCollisionEnter(Collision collision)

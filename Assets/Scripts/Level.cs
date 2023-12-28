@@ -58,5 +58,7 @@ public class Level : MonoBehaviour
             player.isGrounded = false;
         }
 
+        if (Input.GetKey(KeyCode.Escape)) Application.Quit();
+
     }
 }

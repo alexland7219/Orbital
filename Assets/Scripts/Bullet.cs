@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    private float rotSpeed;
+    public float rotSpeed;
     private bool enemyBullet;
 
     // Start is called before the first frame update
@@ -12,6 +12,8 @@ public class Bullet : MonoBehaviour
     {
         enemyBullet = false; // for now
         rotSpeed = 50.0f;
+
+        if (!GameObject.FindObjectOfType<Player>().lookingLeft()) rotSpeed *= -1;
     }
 
     // Update is called once per frame
@@ -38,6 +40,5 @@ public class Bullet : MonoBehaviour
 
         }
     }
-
 
 }
