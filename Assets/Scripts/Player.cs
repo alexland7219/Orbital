@@ -1,8 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
-using System;
 
 public class Player : MonoBehaviour
 {
@@ -11,11 +9,11 @@ public class Player : MonoBehaviour
     public bool isGrounded;
     public bool onElevator;
     public float jumpForce; // Adjust this value to control jump height
-    public string dirToGo;
     public Animator anim;
     private float canJumpTimer;
+    private float canShootTimer;
     private Vector3 directionToOrigin;
-
+    public GameObject bulletObject;
 
     // Start is called before the first frame update
     void Start()
@@ -25,9 +23,10 @@ public class Player : MonoBehaviour
         jumpForce = 100f;
         isGrounded = false;
         onElevator = false;
-        dirToGo = "none";
+        canShootTimer = 0.3f;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
+        bulletObject = GameObject.Find("Bullet-template");
 
         directionToOrigin = Vector3.Normalize(Vector3.zero - transform.position);
         directionToOrigin.y = 0f;
@@ -42,6 +41,11 @@ public class Player : MonoBehaviour
         RaycastHit hit;
 
         return Physics.Raycast(ray, out hit, .1f);
+    }
+
+    public bool lookingLeft(){
+        // Returns true if we are looking to the left
+        return (transform.localScale.z > 0);
     }
 
     // Update is called once per frame
@@ -63,6 +67,31 @@ public class Player : MonoBehaviour
             anim.SetBool("jump", false);
             anim.SetBool("jumpRunning", false);
         }
+
+        if (!anim.GetBool("shooting") && Input.GetKey(KeyCode.P)){
+            anim.SetBool("shooting", true);
+            // Shoot
+            shoot();
+        }
+        else if (anim.GetBool("shooting")){
+            canShootTimer -= Time.deltaTime;
+            if (canShootTimer < 0){
+                canShootTimer = 1f;
+                if (!Input.GetKey(KeyCode.P)) anim.SetBool("shooting", false);
+            }
+        }
+    }
+
+    void shoot()
+    {
+        if (!anim.GetBool("shooting")) return; // we have to have the shooting animations started
+
+        // Shoot a bullet
+        Vector3 spawnPosition = transform.position;
+        spawnPosition.y += 1;
+
+        GameObject bullObj = Instantiate(bulletObject, spawnPosition, transform.rotation);
+        bullObj.transform.parent = GameObject.Find("Level").transform;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -84,16 +113,20 @@ public class Player : MonoBehaviour
             else if (normal.z == +1) canRotateRight = false;
 
         }
+        else if (collision.gameObject.tag ==  "Enemy")
+        {
+            // Hurt
+            Debug.LogWarning("PLAYER HURT");
+
+        }
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Elevator"))
         {
-            if (Input.GetKey(KeyCode.Space)) {
-                onElevator = true;
-                Debug.Log("Collision player-elevator");
-            }
+            onElevator = true;
+            Debug.Log("Collision player-elevator");
         }
 
     }
@@ -129,24 +162,4 @@ public class Player : MonoBehaviour
     public void releaseFromElevator(){ onElevator = false; }
 
     public void moveInwards(int inw){ transform.Translate(directionToOrigin * inw * Time.deltaTime); }
-
-    public void centerElevator(Vector3 center) {
-        onElevator = true;
-        Vector3 pos = transform.position;
-        if (center.z > pos.z) dirToGo = "left";
-        else dirToGo = "right";
-        //transform.Translate(directionToOrigin * center * Time.deltaTime);
-    }
-
-    public bool isCentered(Vector3 center)
-    {
-        Vector3 pos = transform.position;
-        Debug.Log("Diferencies " + Math.Abs(center.x - pos.x) + " " + Math.Abs(center.z - pos.z));
-        if ((Math.Abs(center.z - pos.z) < 0.1f)) {
-            dirToGo = "none";
-            return true;
-        }
-        return false;
-        //transform.Translate(directionToOrigin * center * Time.deltaTime);
-    }
 }
