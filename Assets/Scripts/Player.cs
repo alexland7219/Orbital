@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     private float canShootTimer;
     private Vector3 directionToOrigin;
     public GameObject bulletObject;
+    public int hp;
 
     // Start is called before the first frame update
     void Start()
@@ -30,10 +31,9 @@ public class Player : MonoBehaviour
         canShootTimer = 0.3f;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
-        bulletObject = GameObject.Find("Bullet-template");
-
         directionToOrigin = Vector3.Normalize(Vector3.zero - transform.position);
         directionToOrigin.y = 0f;
+        hp = 100;
 
     }
 
@@ -121,6 +121,7 @@ public class Player : MonoBehaviour
         {
             // Hurt
             Debug.LogWarning("PLAYER HURT");
+            hp -= 10;
 
         }
     }
