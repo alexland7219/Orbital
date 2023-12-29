@@ -2,19 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class flyingEnemy : MonoBehaviour
+public class walkingEnemy : MonoBehaviour
 {
     public float rotSpeed;
     public int hp;
     public bool shieldOn;
+    public float angle;
 
-    private int nCubes;
-
-    public float amplitude = 1.5f;  // Amplitude of the sine wave
-    public float frequency = 1.5f;  // Frequency of the sine wave
-
-    private float startTime;
     private float invincible;
+    private int nCubes;
 
     Health_Bar healthBarComponent;
 
@@ -25,22 +21,20 @@ public class flyingEnemy : MonoBehaviour
         hp = 100;
         shieldOn = true;
         nCubes = 4;
-        startTime = Time.time;
+        angle = 0;
         healthBarComponent = gameObject.transform.Find("HealthCanvas/HealthBar").gameObject.GetComponent<Health_Bar>();
-
     }
 
     // Update is called once per frame
     void Update()
     {
-        float yPos = amplitude * Mathf.Sin(2 * Mathf.PI * frequency * (Time.time - startTime));
-
-        transform.position = new Vector3(transform.position.x, yPos + 5, transform.position.z);
+        if (angle > 180 || angle < 0) { rotSpeed = -rotSpeed; }
         transform.RotateAround(Vector3.zero, Vector3.up, rotSpeed * Time.deltaTime);
+        angle += rotSpeed * Time.deltaTime;
 
         if (hp != healthBarComponent.health) healthBarComponent.health = hp;
 
-        if (Input.GetKey(KeyCode.H) && invincible <= 0)
+        if (Input.GetKey(KeyCode.G) && invincible <= 0)
         {
             hp -= 20;
             invincible = 0.5f;
@@ -50,15 +44,8 @@ public class flyingEnemy : MonoBehaviour
         if (hp <= 0) die();
     }
 
-    void OnCollisionEnter(Collision collision)
+    void die()
     {
-        if (collision.gameObject.tag == "Bullet")
-        {
-            hp -= 20;
-        }
-    }
-
-    void die(){
         for (int x = 0; x < nCubes; ++x)
             for (int y = 0; y < nCubes; ++y)
                 for (int z = 0; z < nCubes; ++z)
@@ -83,6 +70,6 @@ public class flyingEnemy : MonoBehaviour
         miniCube mc = cube.AddComponent<miniCube>();
 
         Rigidbody rb = cube.AddComponent<Rigidbody>();
-        rb.AddExplosionForce(200f , transform.position, 2.0f);
+        rb.AddExplosionForce(200f, transform.position, 2.0f);
     }
 }
