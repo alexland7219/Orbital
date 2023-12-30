@@ -18,7 +18,10 @@ public class Player : MonoBehaviour
     private Vector3 directionToOrigin;
     public GameObject bulletObject;
     public Slider healthSlider;
+    public Slider ammoSlider;
+
     public int hp;
+    public int ammo;
 
     // Start is called before the first frame update
     void Start()
@@ -29,13 +32,15 @@ public class Player : MonoBehaviour
         isGrounded = false;
         onElevator = false;
         dirToGo = "none";
-        canShootTimer = 0.3f;
+        canShootTimer = 0.5f;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
         directionToOrigin = Vector3.Normalize(Vector3.zero - transform.position);
         directionToOrigin.y = 0f;
         hp = 100;
+        ammo = 16;
         healthSlider = GameObject.FindWithTag("Healthbar").GetComponent<Slider>();
+        ammoSlider = GameObject.FindWithTag("AmmoBar").GetComponent<Slider>();
     }
 
     private bool checkGrounded(){
@@ -81,22 +86,28 @@ public class Player : MonoBehaviour
         else if (anim.GetBool("shooting")){
             canShootTimer -= Time.deltaTime;
             if (canShootTimer < 0){
-                canShootTimer = 1f;
+                canShootTimer = 0.5f;
                 if (!Input.GetKey(KeyCode.P)) anim.SetBool("shooting", false);
+                else shoot();
             }
         }
     }
 
     void shoot()
     {
+        if (ammo == 0) return;
         if (!anim.GetBool("shooting")) return; // we have to have the shooting animations started
 
         // Shoot a bullet
         Vector3 spawnPosition = transform.position;
-        spawnPosition.y += 1;
+        spawnPosition.y += 1.1f;
 
         GameObject bullObj = Instantiate(bulletObject, spawnPosition, transform.rotation);
         bullObj.transform.parent = GameObject.Find("Level").transform;
+
+        // Update ammo bar
+        ammo = ammo - 1;
+        ammoSlider.value = ammo / 16.0f;
     }
 
     void OnCollisionEnter(Collision collision)
@@ -125,6 +136,11 @@ public class Player : MonoBehaviour
             hp -= 10;
             healthSlider.value = hp / 100.0f;
 
+        }
+        else if (collision.gameObject.tag == "Ammo"){
+            ammo = 16;
+            ammoSlider.value = ammo / 16.0f;
+            Destroy(collision.gameObject);
         }
     }
 
