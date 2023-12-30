@@ -9,7 +9,7 @@ public class miniCube : MonoBehaviour
     {
         float randNumber = Random.Range(0f, 2f);
 
-        Invoke("Death", 1f + randNumber);
+        Invoke("Death", randNumber);
     }
 
     void Death()

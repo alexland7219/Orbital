@@ -20,7 +20,7 @@ public class walkingEnemy : MonoBehaviour
         rotSpeed = 20.0f;
         hp = 100;
         shieldOn = true;
-        nCubes = 4;
+        nCubes = 5;
         angle = 0;
         healthBarComponent = gameObject.transform.Find("HealthCanvas/HealthBar").gameObject.GetComponent<Health_Bar>();
     }
@@ -43,6 +43,15 @@ public class walkingEnemy : MonoBehaviour
 
         if (hp <= 0) die();
     }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Bullet")
+        {
+            hp -= 20;
+        }
+    }
+
 
     void die()
     {
@@ -70,6 +79,6 @@ public class walkingEnemy : MonoBehaviour
         miniCube mc = cube.AddComponent<miniCube>();
 
         Rigidbody rb = cube.AddComponent<Rigidbody>();
-        rb.AddExplosionForce(200f, transform.position, 2.0f);
+        rb.AddExplosionForce(500f, transform.position, 2.0f);
     }
 }

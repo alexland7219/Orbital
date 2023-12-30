@@ -19,7 +19,7 @@ public class Health_Bar : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log((healthSlider != null) + " " + (easehealthSlider != null));
+        //Debug.Log((healthSlider != null) + " " + (easehealthSlider != null));
         if (healthSlider != null && easehealthSlider != null) {
             if (healthSlider.value != health) { healthSlider.value = health; }
 

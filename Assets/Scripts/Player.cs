@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using System;
-
+using UnityEngine.UI;
 public class Player : MonoBehaviour
 {
     public bool canRotateLeft;
@@ -17,6 +17,7 @@ public class Player : MonoBehaviour
     private float canShootTimer;
     private Vector3 directionToOrigin;
     public GameObject bulletObject;
+    public Slider healthSlider;
     public int hp;
 
     // Start is called before the first frame update
@@ -34,7 +35,7 @@ public class Player : MonoBehaviour
         directionToOrigin = Vector3.Normalize(Vector3.zero - transform.position);
         directionToOrigin.y = 0f;
         hp = 100;
-
+        healthSlider = GameObject.FindWithTag("Healthbar").GetComponent<Slider>();
     }
 
     private bool checkGrounded(){
@@ -122,6 +123,7 @@ public class Player : MonoBehaviour
             // Hurt
             Debug.LogWarning("PLAYER HURT");
             hp -= 10;
+            healthSlider.value = hp / 100.0f;
 
         }
     }
