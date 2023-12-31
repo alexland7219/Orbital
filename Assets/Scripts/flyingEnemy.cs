@@ -15,6 +15,9 @@ public class flyingEnemy : MonoBehaviour
 
     private float startTime;
     private float invincible;
+    public GameObject sonObject;
+
+    public float timeToSpawnChild;
 
     Health_Bar healthBarComponent;
 
@@ -24,6 +27,7 @@ public class flyingEnemy : MonoBehaviour
         rotSpeed = 20.0f;
         hp = 100;
         shieldOn = true;
+        timeToSpawnChild = 3.0f;
         nCubes = 4;
         startTime = Time.time;
         healthBarComponent = gameObject.transform.Find("HealthCanvas/HealthBar").gameObject.GetComponent<Health_Bar>();
@@ -48,6 +52,9 @@ public class flyingEnemy : MonoBehaviour
         if (invincible > 0) invincible -= Time.deltaTime;
 
         if (hp <= 0) die();
+
+        timeToSpawnChild -= Time.deltaTime;
+        if (timeToSpawnChild < 0) spawnChild();
     }
 
     void OnCollisionEnter(Collision collision)
@@ -56,6 +63,17 @@ public class flyingEnemy : MonoBehaviour
         {
             hp -= 20;
         }
+    }
+
+    void spawnChild()
+    {
+        timeToSpawnChild = 20f;
+
+        Vector3 spawnPos = transform.position;
+        spawnPos.y -= 0.8f;
+
+        GameObject trapObj = Instantiate(sonObject, spawnPos, transform.rotation);
+        trapObj.transform.parent = GameObject.Find("Level").transform;
     }
 
     void die(){

@@ -12,6 +12,7 @@ TagManager:
   - Healthbar
   - AmmoBar
   - Ammo
+  - Enemy-Low-HP
   layers:
   - Default
   - TransparentFX

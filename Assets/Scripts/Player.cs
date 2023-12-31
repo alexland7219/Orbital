@@ -10,7 +10,7 @@ public class Player : MonoBehaviour
     public bool canRotateRight;
     public bool isGrounded;
     public bool onElevator;
-    public float jumpForce; // Adjust this value to control jump height
+    public const float jumpForce = 100f;
     public string dirToGo;
     public Animator anim;
     private float canJumpTimer;
@@ -19,6 +19,8 @@ public class Player : MonoBehaviour
     public GameObject bulletObject;
     public Slider healthSlider;
     public Slider ammoSlider;
+    public float timeSinceLastDamage;
+    public const float timeBetweenDamages = 0.5f;
 
     public int hp;
     public int ammo;
@@ -28,8 +30,8 @@ public class Player : MonoBehaviour
     {
         canRotateRight = true;
         canRotateLeft = true;
-        jumpForce = 100f;
         isGrounded = false;
+        timeSinceLastDamage = 0;
         onElevator = false;
         dirToGo = "none";
         canShootTimer = 0.5f;
@@ -61,6 +63,7 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        timeSinceLastDamage += Time.deltaTime;
         //Debug.Log("Grounded: " + isGrounded + " LeftRot: " + canRotateLeft + " RightRot: " + canRotateRight);
         //if (anim.GetBool("running") && !anim.GetBool("jumpRunning") && !anim.GetBool("roll") && Input.GetKey(KeyCode.R)){
         //    anim.SetTrigger("roll");
@@ -105,9 +108,23 @@ public class Player : MonoBehaviour
         GameObject bullObj = Instantiate(bulletObject, spawnPosition, transform.rotation);
         bullObj.transform.parent = GameObject.Find("Level").transform;
 
+        if (lookingLeft()) RotateObjectAroundY(bullObj, 180f);
+
         // Update ammo bar
         ammo = ammo - 1;
         ammoSlider.value = ammo / 16.0f;
+    }
+
+    void RotateObjectAroundY(GameObject obj, float angle)
+    {
+        // Get the current rotation of the object
+        Vector3 currentRotation = obj.transform.rotation.eulerAngles;
+
+        // Set the new Y-axis rotation
+        currentRotation.y = angle;
+
+        // Apply the new rotation to the object
+        obj.transform.rotation = Quaternion.Euler(currentRotation);
     }
 
     void OnCollisionEnter(Collision collision)
@@ -131,8 +148,10 @@ public class Player : MonoBehaviour
         }
         else if (collision.gameObject.tag ==  "Enemy")
         {
+            if (timeSinceLastDamage < timeBetweenDamages) return;
+            else timeSinceLastDamage = 0f;
             // Hurt
-            Debug.LogWarning("PLAYER HURT");
+            //Debug.LogWarning("PLAYER HURT");
             hp -= 10;
             healthSlider.value = hp / 100.0f;
 
@@ -153,7 +172,10 @@ public class Player : MonoBehaviour
                 Debug.Log("Collision player-elevator");
             }
         }
-
+        else if (other.CompareTag("Enemy-Low-HP")){
+            hp -= 2;
+            healthSlider.value = hp / 100.0f;
+        }   
     }
 
     void OnCollisionExit(Collision collision)

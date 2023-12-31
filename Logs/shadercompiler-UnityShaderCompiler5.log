@@ -1,0 +1,21 @@
+Base path: '/home/link/Unity/Hub/Editor/2022.3.9f1/Editor/Data', plugins path '/home/link/Unity/Hub/Editor/2022.3.9f1/Editor/Data/PlaybackEngines'
+Cmd: initializeCompiler
+
+Cmd: disassembleShader
+ name=Standard platform=glcore type=6 mask=6 insize=15137 outsize=15137 ok=1
+
+Cmd: disassembleShader
+ name=Standard platform=glcore type=6 mask=6 insize=10258 outsize=10258 ok=1
+
+Cmd: disassembleShader
+ name=Standard platform=vulkan type=25 mask=6 insize=8942 outsize=79277 ok=1
+
+Cmd: disassembleShader
+ name=Standard platform=vulkan type=25 mask=6 insize=3052 outsize=26555 ok=1
+
+Cmd: disassembleShader
+ name=Standard platform=vulkan type=25 mask=6 insize=12054 outsize=109302 ok=1
+
+Cmd: disassembleShader
+ name=Standard platform=glcore type=6 mask=6 insize=8619 outsize=8619 ok=1
+
