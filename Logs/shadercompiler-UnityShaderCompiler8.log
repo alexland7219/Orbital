@@ -28,3 +28,6 @@ Cmd: disassembleShader
 Cmd: disassembleShader
  name=Standard platform=vulkan type=25 mask=6 insize=5081 outsize=44608 ok=1
 
+Cmd: shutdown
+
+Quitting shader compiler process

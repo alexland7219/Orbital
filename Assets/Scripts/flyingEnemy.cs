@@ -18,6 +18,7 @@ public class flyingEnemy : MonoBehaviour
     public GameObject sonObject;
 
     public float timeToSpawnChild;
+    public float initialHeight;
 
     Health_Bar healthBarComponent;
 
@@ -29,6 +30,7 @@ public class flyingEnemy : MonoBehaviour
         shieldOn = true;
         timeToSpawnChild = 3.0f;
         nCubes = 4;
+        initialHeight = transform.position.y;
         startTime = Time.time;
         healthBarComponent = gameObject.transform.Find("HealthCanvas/HealthBar").gameObject.GetComponent<Health_Bar>();
 
@@ -39,7 +41,7 @@ public class flyingEnemy : MonoBehaviour
     {
         float yPos = amplitude * Mathf.Sin(2 * Mathf.PI * frequency * (Time.time - startTime));
 
-        transform.position = new Vector3(transform.position.x, yPos + 5, transform.position.z);
+        transform.position = new Vector3(transform.position.x, yPos + initialHeight, transform.position.z);
         transform.RotateAround(Vector3.zero, Vector3.up, rotSpeed * Time.deltaTime);
 
         if (hp != healthBarComponent.health) healthBarComponent.health = hp;
