@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -524,7 +524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a5761237852f01eab1fd17d7846cd93, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 1.3
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a5761237852f01eab1fd17d7846cd93, type: 3}
       propertyPath: m_LocalPosition.z
@@ -4340,7 +4340,7 @@ GameObject:
   - component: {fileID: 773607637}
   - component: {fileID: 773607638}
   m_Layer: 0
-  m_Name: GameObject
+  m_Name: Ammo
   m_TagString: Ammo
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

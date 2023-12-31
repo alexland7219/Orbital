@@ -28,7 +28,16 @@ public class walkingEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (angle > 180 || angle < 0) { rotSpeed = -rotSpeed; }
+        if (angle > 180 || angle < 0) { 
+            rotSpeed = -rotSpeed;
+            if (gameObject.tag == "Animated")
+            {
+                Animator anim = GetComponent<Animator>();
+                //if (rotSpeed > 0) anim.SetTrigger("WalkLeft");
+                //else anim.SetTrigger("WalkRight");
+            }
+        }
+
         transform.RotateAround(Vector3.zero, Vector3.up, rotSpeed * Time.deltaTime);
         angle += rotSpeed * Time.deltaTime;
 
