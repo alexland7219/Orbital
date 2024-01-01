@@ -28,6 +28,7 @@ public class ElevatorH : MonoBehaviour
 
         directionToOrigin = Vector3.Normalize(vrp - transform.position);
         directionToOrigin.y = 0f;
+        directionToOrigin = Vector3.Normalize(directionToOrigin);
 
         totalTime = 2.6f;
 

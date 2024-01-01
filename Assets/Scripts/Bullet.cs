@@ -7,13 +7,15 @@ public class Bullet : MonoBehaviour
     public float rotSpeed;
     private bool enemyBullet;
     public float timeToLive;
+    public bool isSmallBullet;
 
     // Start is called before the first frame update
     void Start()
     {
         enemyBullet = false; // for now
         rotSpeed = 50.0f;
-        timeToLive = 10.0f;
+        if (!isSmallBullet) timeToLive = 10.0f;
+        else timeToLive = 0.5f;
 
         if (!GameObject.FindObjectOfType<Player>().lookingLeft()) rotSpeed *= -1;
     }

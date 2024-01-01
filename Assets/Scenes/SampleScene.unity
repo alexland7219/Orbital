@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 705507994}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657832, g: 0.49641222, b: 0.57481664, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -524,7 +524,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a5761237852f01eab1fd17d7846cd93, type: 3}
       propertyPath: m_LocalPosition.y
-      value: 15
+      value: 1.04
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 1a5761237852f01eab1fd17d7846cd93, type: 3}
       propertyPath: m_LocalPosition.z
@@ -591,6 +591,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1a5761237852f01eab1fd17d7846cd93, type: 3}
       insertIndex: -1
       addedObject: {fileID: 91448703}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 1a5761237852f01eab1fd17d7846cd93, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 91448705}
   m_SourcePrefab: {fileID: 100100000, guid: 1a5761237852f01eab1fd17d7846cd93, type: 3}
 --- !u!1 &91448697 stripped
 GameObject:
@@ -616,9 +619,11 @@ MonoBehaviour:
   dirToGo: 
   anim: {fileID: 0}
   bulletObject: {fileID: 1718435956358860342, guid: 90a4f55b32e8a5b0b8c1ca1246f3cc5f, type: 3}
+  smallBulletObject: {fileID: 1718435956358860342, guid: 7fd7afab08b173576945ff01a2f0699c, type: 3}
   healthSlider: {fileID: 0}
   ammoSlider: {fileID: 0}
   timeSinceLastDamage: 0
+  haveSmallGun: 0
   hp: 0
   ammo: 0
 --- !u!54 &91448699
@@ -695,6 +700,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5290782, y: 0.5111339, z: 0.15436509}
   m_Center: {x: -0.009095791, y: 0.23923236, z: 0.022080574}
+--- !u!64 &91448705
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 91448697}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 0
+  serializedVersion: 5
+  m_Convex: 1
+  m_CookingOptions: 30
+  m_Mesh: {fileID: -3304173957634012018, guid: 1a5761237852f01eab1fd17d7846cd93, type: 3}
 --- !u!1 &93167044
 GameObject:
   m_ObjectHideFlags: 0
@@ -10096,7 +10123,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 2a1746b0230a364b3b5faa01b001a91f, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

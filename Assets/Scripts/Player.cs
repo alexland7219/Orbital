@@ -16,11 +16,16 @@ public class Player : MonoBehaviour
     private float canJumpTimer;
     private float canShootTimer;
     private Vector3 directionToOrigin;
+
     public GameObject bulletObject;
+    public GameObject smallBulletObject;
+
     public Slider healthSlider;
     public Slider ammoSlider;
     public float timeSinceLastDamage;
     public const float timeBetweenDamages = 0.5f;
+
+    public bool haveSmallGun;
 
     public int hp;
     public int ammo;
@@ -33,14 +38,16 @@ public class Player : MonoBehaviour
         isGrounded = false;
         timeSinceLastDamage = 0;
         onElevator = false;
+        haveSmallGun = true;
         dirToGo = "none";
         canShootTimer = 0.5f;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
         directionToOrigin = Vector3.Normalize(Vector3.zero - transform.position);
         directionToOrigin.y = 0f;
+        directionToOrigin = Vector3.Normalize(directionToOrigin);
         hp = 100;
-        ammo = 16;
+        ammo = 32;
         healthSlider = GameObject.FindWithTag("Healthbar").GetComponent<Slider>();
         ammoSlider = GameObject.FindWithTag("AmmoBar").GetComponent<Slider>();
     }
@@ -89,10 +96,21 @@ public class Player : MonoBehaviour
         else if (anim.GetBool("shooting")){
             canShootTimer -= Time.deltaTime;
             if (canShootTimer < 0){
-                canShootTimer = 0.5f;
+                if (!haveSmallGun) canShootTimer = 0.5f;
+                else canShootTimer = 0.2f; // Small gun takes less time to reload
+
                 if (!Input.GetKey(KeyCode.P)) anim.SetBool("shooting", false);
                 else shoot();
             }
+        }
+
+        // Roll
+        if (Input.GetKey(KeyCode.R)){
+            anim.SetTrigger("roll");
+        }
+
+        if (Input.GetKey(KeyCode.S)){
+            haveSmallGun = !haveSmallGun;
         }
     }
 
@@ -105,14 +123,20 @@ public class Player : MonoBehaviour
         Vector3 spawnPosition = transform.position;
         spawnPosition.y += 1.1f;
 
-        GameObject bullObj = Instantiate(bulletObject, spawnPosition, transform.rotation);
-        bullObj.transform.parent = GameObject.Find("Level").transform;
+        GameObject bullObj;
+
+        if (!haveSmallGun) bullObj = Instantiate(bulletObject, spawnPosition, transform.rotation);
+        else bullObj = Instantiate(smallBulletObject, spawnPosition, transform.rotation);
+
+        //bullObj.transform.parent = GameObject.Find("Level").transform;
 
         if (lookingLeft()) RotateObjectAroundY(bullObj, 180f);
 
         // Update ammo bar
-        ammo = ammo - 1;
-        ammoSlider.value = ammo / 16.0f;
+        if (haveSmallGun) ammo = ammo - 1;
+        else ammo -= 2;
+
+        ammoSlider.value = ammo / 32.0f;
     }
 
     void RotateObjectAroundY(GameObject obj, float angle)
