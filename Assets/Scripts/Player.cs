@@ -20,21 +20,23 @@ public class Player : MonoBehaviour
     public GameObject bulletObject;
     public GameObject smallBulletObject;
 
-    public Slider healthSlider;
-    public Slider ammoSlider;
+    private Slider healthSlider;
+    private Slider ammoSlider;
     public float timeSinceLastDamage;
     public const float timeBetweenDamages = 0.5f;
 
     public bool haveSmallGun;
+    public bool discoveredBigGun;
 
-    public int hp;
-    public int ammo;
+    private int hp;
+    private int ammo;
 
     // Start is called before the first frame update
     void Start()
     {
         canRotateRight = true;
         canRotateLeft = true;
+        discoveredBigGun = false;
         isGrounded = false;
         timeSinceLastDamage = 0;
         onElevator = false;
@@ -109,7 +111,7 @@ public class Player : MonoBehaviour
             anim.SetTrigger("roll");
         }
 
-        if (Input.GetKey(KeyCode.S)){
+        if (Input.GetKey(KeyCode.S) && discoveredBigGun){
             haveSmallGun = !haveSmallGun;
         }
     }
@@ -200,6 +202,13 @@ public class Player : MonoBehaviour
             hp -= 2;
             healthSlider.value = hp / 100.0f;
         }   
+        else if (other.CompareTag("Checkpoint"))
+        {
+            ammo = 16;
+            ammoSlider.value = ammo / 16.0f;
+            discoveredBigGun = true;
+            haveSmallGun = false;
+        }
     }
 
     void OnCollisionExit(Collision collision)
