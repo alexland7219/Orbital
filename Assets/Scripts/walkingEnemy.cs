@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class walkingEnemy : MonoBehaviour
@@ -10,84 +9,111 @@ public class walkingEnemy : MonoBehaviour
     public float angle;
 
     private float invincible;
-    private int nCubes;
+    private float oldrotSpeed;
+    private float deathTimer;
+    private float stopTimer;
+    private bool stopped;
 
+    Animator anim;
     Health_Bar healthBarComponent;
 
     // Start is called before the first frame update
     void Start()
     {
-        rotSpeed = 20.0f;
+        rotSpeed = 15.0f;
         hp = 100;
         shieldOn = true;
-        nCubes = 5;
         angle = 0;
         healthBarComponent = gameObject.transform.Find("HealthCanvas/HealthBar").gameObject.GetComponent<Health_Bar>();
+        anim = GetComponent<Animator>();
+        oldrotSpeed = 0;
+        invincible = 0;
+        deathTimer = 2.0f;
+        stopped = false;
+        stopTimer = 5.0f;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (angle > 180 || angle < 0) { 
+        if (angle > 90 || angle < 0) { 
             rotSpeed = -rotSpeed;
-            if (gameObject.tag == "Animated")
-            {
-                Animator anim = GetComponent<Animator>();
-                //if (rotSpeed > 0) anim.SetTrigger("WalkLeft");
-                //else anim.SetTrigger("WalkRight");
-            }
+            transform.Rotate(new Vector3(0, 180, 0));
         }
+
+        if (!stopped && Vector3.Distance(new Vector3(-8.56129646f, 12.5699997f, 0), transform.position) < 5 && isgettingCloser()) {
+
+            /////////
+            //    Aqui s'aurà de posar la posicio exacta del jugador
+            /////////
+            
+            Debug.Log(new Vector3(-8.56129646f, 12.5699997f, 0) + " i " + transform.position);
+            anim.SetBool("Walk", false);
+            oldrotSpeed = rotSpeed;
+            rotSpeed = 0;
+            stopped = true;
+        }
+
+        if (stopped && stopTimer <= 0) {
+            anim.SetBool("Walk", true);
+            rotSpeed = oldrotSpeed;
+            stopped = false;
+            stopTimer = 5.0f;
+        }
+
+        if (stopped) stopTimer -= Time.deltaTime;
 
         transform.RotateAround(Vector3.zero, Vector3.up, rotSpeed * Time.deltaTime);
         angle += rotSpeed * Time.deltaTime;
 
         if (hp != healthBarComponent.health) healthBarComponent.health = hp;
 
-        if (Input.GetKey(KeyCode.G) && invincible <= 0)
+        if (Input.GetKey(KeyCode.D) && invincible <= 0)
         {
-            hp -= 20;
+            if (rotSpeed == 0) {
+                anim.SetBool("Walk", true);
+                rotSpeed = oldrotSpeed;
+            }
+            else {
+                anim.SetBool("Walk", false);
+                oldrotSpeed = rotSpeed;
+                rotSpeed = 0;
+            }
             invincible = 0.5f;
         }
         if (invincible > 0) invincible -= Time.deltaTime;
 
-        if (hp <= 0) die();
+        if (anim.GetBool("Death"))
+        {
+            deathTimer -= Time.deltaTime;
+        }
+        if (anim.GetBool("Death") && deathTimer <= 0) die();
     }
 
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Bullet")
         {
+            Debug.Log("Bullet hit");
+            anim.SetTrigger("GetHit");
             hp -= 20;
+            if (hp <= 20)
+            {
+                if (hp > 0) anim.SetBool("1HP", true);
+                if (hp <= 0) anim.SetBool("Death", true);
+                rotSpeed = 0;
+            }
         }
     }
 
 
     void die()
     {
-        for (int x = 0; x < nCubes; ++x)
-            for (int y = 0; y < nCubes; ++y)
-                for (int z = 0; z < nCubes; ++z)
-                    CreateCube(new Vector3(x, y, z));
-
         Destroy(gameObject);
     }
 
-    void CreateCube(Vector3 coordinates)
-    {
-        GameObject cube = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-        Renderer rd = cube.GetComponent<Renderer>();
-        rd.material = GetComponent<Renderer>().material;
-
-        cube.transform.localScale = transform.localScale / nCubes;
-        Vector3 fstCube = transform.position - transform.localScale / 2 + cube.transform.localScale / 2;
-        cube.transform.position = fstCube + Vector3.Scale(coordinates, cube.transform.localScale);
-
-        cube.transform.parent = GameObject.Find("Level").transform;
-
-        miniCube mc = cube.AddComponent<miniCube>();
-
-        Rigidbody rb = cube.AddComponent<Rigidbody>();
-        rb.AddExplosionForce(500f, transform.position, 2.0f);
+    bool isgettingCloser() {
+        if (transform.position.z > 0) return rotSpeed < 0;
+        else return rotSpeed > 0;
     }
 }
