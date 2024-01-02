@@ -1,0 +1,39 @@
+Medium = Menú de Pausa
+Medium = Menú Principal, Credits, Instruccions
+Easy   = Background
+Hard   = Tercer Enemic (turret?)
+Hard   = Boss 
+Medium = Level desing
+Medium = Esquiva / Roll (moviment rapid on ets invencible)
+Medium = Dos Nivells armadura 
+Easy   = G (invencible) X (recarrega)
+Easy   = Música
+[?]    = Planta a passar en 2 minuts
+
+= MEMORIA
+
+Dimarts
+===========
+Dos Nivells Armadura - W
+Tercer Enemic        - R
+Esquiva              - R
+Boss                 - W
+Música               - R
+Background           - R
+
+Dimecres
+==========
+Música               - R + W
+Boss	             - R + W
+Planta 2'            - R
+G + X	             - R/w	
+UI	             - R + W
+Level Design         - R + W
+
+Dijous + Divendes
+=========
+
+Memoria
+UI
+Level Design
+Entrega

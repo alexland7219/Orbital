@@ -3637,7 +3637,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 1636670926}
   m_LocalEulerAnglesHint: {x: 50, y: -30, z: 0}
 --- !u!1 &710406471
 GameObject:
@@ -5363,7 +5363,7 @@ Skybox:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: 2ee0bf7419ac92dde9a93b9df9f84894, type: 2}
+  m_CustomSkybox: {fileID: 2100000, guid: 58472fa504bab868583a4fefe6b39dc9, type: 2}
 --- !u!1 &980563525
 GameObject:
   m_ObjectHideFlags: 0
@@ -8290,6 +8290,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 705507995}
   - {fileID: 650094546}
   - {fileID: 1819842582}
   - {fileID: 1912024358}
@@ -10600,7 +10601,6 @@ SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 963194228}
-  - {fileID: 705507995}
   - {fileID: 1636670926}
   - {fileID: 91448696}
   - {fileID: 1370023188}
