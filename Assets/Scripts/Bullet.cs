@@ -30,20 +30,13 @@ public class Bullet : MonoBehaviour
 
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
         //Debug.LogWarning("Collision with " + collision.gameObject.tag);
-        if (collision.gameObject.tag == "Block")
-        {
-
-            // Die
-            Destroy(gameObject);
-
-        }
-        else if (collision.gameObject.tag ==  "Enemy")
+        if (other.CompareTag("Block")) die();
+        else if (other.CompareTag("Enemy"))
         {
             // Hurt
-            Debug.Log("Enemy hit");
             die();
         }
     }

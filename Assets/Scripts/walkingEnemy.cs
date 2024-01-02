@@ -44,7 +44,7 @@ public class walkingEnemy : MonoBehaviour
         if (!stopped && Vector3.Distance(new Vector3(-8.56129646f, 12.5699997f, 0), transform.position) < 5 && isgettingCloser()) {
 
             /////////
-            //    Aqui s'aurà de posar la posicio exacta del jugador
+            //    Aqui s'aurï¿½ de posar la posicio exacta del jugador
             /////////
             
             Debug.Log(new Vector3(-8.56129646f, 12.5699997f, 0) + " i " + transform.position);
@@ -90,11 +90,11 @@ public class walkingEnemy : MonoBehaviour
         if (anim.GetBool("Death") && deathTimer <= 0) die();
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.tag == "Bullet")
+        if (other.CompareTag("Bullet"))
         {
-            Debug.Log("Bullet hit");
+            //Debug.Log("Bullet hit");
             anim.SetTrigger("GetHit");
             hp -= 20;
             if (hp <= 20)
@@ -103,6 +103,8 @@ public class walkingEnemy : MonoBehaviour
                 if (hp <= 0) anim.SetBool("Death", true);
                 rotSpeed = 0;
             }
+
+            Destroy(other.gameObject);
         }
     }
 

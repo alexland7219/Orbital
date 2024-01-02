@@ -30,6 +30,7 @@ public class Player : MonoBehaviour
 
     private int hp;
     private int ammo;
+    private bool isInsideEnemy;
 
     // Start is called before the first frame update
     void Start()
@@ -52,6 +53,7 @@ public class Player : MonoBehaviour
         ammo = 32;
         healthSlider = GameObject.FindWithTag("Healthbar").GetComponent<Slider>();
         ammoSlider = GameObject.FindWithTag("AmmoBar").GetComponent<Slider>();
+        isInsideEnemy = false;
     }
 
     private bool checkGrounded(){
@@ -114,6 +116,12 @@ public class Player : MonoBehaviour
         if (Input.GetKey(KeyCode.S) && discoveredBigGun){
             haveSmallGun = !haveSmallGun;
         }
+
+        if (isInsideEnemy && timeSinceLastDamage > timeBetweenDamages){
+            timeSinceLastDamage = 0;
+            hp -= 10;
+            healthSlider.value = hp / 100.0f;
+        }
     }
 
     void shoot()
@@ -172,19 +180,9 @@ public class Player : MonoBehaviour
             else if (normal.z == +1) canRotateRight = false;
 
         }
-        else if (collision.gameObject.tag ==  "Enemy")
-        {
-            if (timeSinceLastDamage < timeBetweenDamages) return;
-            else timeSinceLastDamage = 0f;
-            // Hurt
-            //Debug.LogWarning("PLAYER HURT");
-            hp -= 10;
-            healthSlider.value = hp / 100.0f;
-
-        }
         else if (collision.gameObject.tag == "Ammo"){
-            ammo = 16;
-            ammoSlider.value = ammo / 16.0f;
+            ammo = 32;
+            ammoSlider.value = ammo / 32.0f;
             Destroy(collision.gameObject);
         }
     }
@@ -204,11 +202,21 @@ public class Player : MonoBehaviour
         }   
         else if (other.CompareTag("Checkpoint"))
         {
-            ammo = 16;
-            ammoSlider.value = ammo / 16.0f;
+            ammo = 32;
+            ammoSlider.value = ammo / 32.0f;
             discoveredBigGun = true;
             haveSmallGun = false;
         }
+        else if (other.CompareTag("Enemy"))
+        {
+            isInsideEnemy = true;
+            timeSinceLastDamage = 0f;
+        }
+
+    }
+
+    void OnTriggerExit(Collider other){
+        if (other.CompareTag("Enemy")) isInsideEnemy = false;
     }
 
     void OnCollisionExit(Collision collision)

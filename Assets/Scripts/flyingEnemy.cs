@@ -59,11 +59,12 @@ public class flyingEnemy : MonoBehaviour
         if (timeToSpawnChild < 0) spawnChild();
     }
 
-    void OnCollisionEnter(Collision collision)
+    void OnTriggerEnter(Collider other)
     {
-        if (collision.gameObject.tag == "Bullet")
+        if (other.CompareTag("Bullet"))
         {
             hp -= 20;
+            Destroy(other.gameObject);
         }
     }
 
@@ -99,6 +100,7 @@ public class flyingEnemy : MonoBehaviour
         cube.transform.position = fstCube + Vector3.Scale(coordinates, cube.transform.localScale);
 
         cube.transform.parent = GameObject.Find("Level").transform;
+        cube.layer = LayerMask.NameToLayer("UI");
 
         miniCube mc = cube.AddComponent<miniCube>();
 
