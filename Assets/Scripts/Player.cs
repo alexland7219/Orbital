@@ -245,7 +245,7 @@ public class Player : MonoBehaviour
     public bool isCentered(Vector3 center)
     {
         Vector3 pos = transform.position;
-        Debug.Log("Diferencies " + Math.Abs(center.x - pos.x) + " " + Math.Abs(center.z - pos.z));
+        //Debug.Log("Diferencies " + Math.Abs(center.x - pos.x) + " " + Math.Abs(center.z - pos.z));
         if ((Math.Abs(center.z - pos.z) < 0.1f)) {
             dirToGo = "none";
             return true;
