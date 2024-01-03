@@ -63,8 +63,12 @@ public class flyingEnemy : MonoBehaviour
     {
         if (other.CompareTag("Bullet"))
         {
-            hp -= 20;
-            Destroy(other.gameObject);
+
+            Bullet otherBull = other.GetComponent<Bullet>();
+            if (!otherBull.getIsEnemy()) {
+                hp -= 20;
+                Destroy(other.gameObject);
+            }
         }
     }
 

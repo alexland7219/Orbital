@@ -31,8 +31,6 @@ public class FloatingGun : MonoBehaviour
 
         float yPos = amplitude * Mathf.Sin(2 * Mathf.PI * frequency * (Time.time - startTime));
 
-        Debug.Log(yPos);
-
         transform.position = new Vector3(transform.position.x, yPos + 1.5f*initialHeight, transform.position.z);
     }
 

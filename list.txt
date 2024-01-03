@@ -15,11 +15,11 @@ Easy   = Música
 Dimarts
 ===========
 Dos Nivells Armadura - W
-Tercer Enemic        - R
-Esquiva              - R
+Tercer Enemic        - R [DONE]
+Esquiva              - R [DONE]
 Boss                 - W
-Música               - R
-Background           - R
+Música               - R [to do]
+Background           - R [maybe]
 
 Dimecres
 ==========

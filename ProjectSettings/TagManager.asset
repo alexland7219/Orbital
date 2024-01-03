@@ -15,6 +15,7 @@ TagManager:
   - Enemy-Low-HP
   - Animated
   - Checkpoint
+  - Turret
   layers:
   - Default
   - TransparentFX

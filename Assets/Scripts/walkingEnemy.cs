@@ -94,17 +94,21 @@ public class walkingEnemy : MonoBehaviour
     {
         if (other.CompareTag("Bullet"))
         {
-            //Debug.Log("Bullet hit");
-            anim.SetTrigger("GetHit");
-            hp -= 20;
-            if (hp <= 20)
-            {
-                if (hp > 0) anim.SetBool("1HP", true);
-                if (hp <= 0) anim.SetBool("Death", true);
-                rotSpeed = 0;
-            }
+            Bullet otherBull = other.GetComponent<Bullet>();
+            if (!otherBull.getIsEnemy()) {
+                
+                anim.SetTrigger("GetHit");
 
-            Destroy(other.gameObject);
+                hp -= 20;
+                if (hp <= 20)
+                {
+                    if (hp > 0) anim.SetBool("1HP", true);
+                    if (hp <= 0) anim.SetBool("Death", true);
+                    rotSpeed = 0;
+                }
+
+                Destroy(other.gameObject);
+            }
         }
     }
 

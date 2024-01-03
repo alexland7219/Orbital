@@ -32,6 +32,8 @@ public class Player : MonoBehaviour
     private int ammo;
     private bool isInsideEnemy;
 
+    private float rollTimer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -75,10 +77,10 @@ public class Player : MonoBehaviour
     void Update()
     {
         timeSinceLastDamage += Time.deltaTime;
-        //Debug.Log("Grounded: " + isGrounded + " LeftRot: " + canRotateLeft + " RightRot: " + canRotateRight);
-        //if (anim.GetBool("running") && !anim.GetBool("jumpRunning") && !anim.GetBool("roll") && Input.GetKey(KeyCode.R)){
-        //    anim.SetTrigger("roll");
-        //}
+        if (anim.GetBool("roll")) {
+            rollTimer -= Time.deltaTime;
+            if (rollTimer < 0) anim.SetBool("roll", false);
+        }
 
         if (canJumpTimer > 0) canJumpTimer -= Time.deltaTime;
 
@@ -110,18 +112,24 @@ public class Player : MonoBehaviour
 
         // Roll
         if (Input.GetKey(KeyCode.R)){
-            anim.SetTrigger("roll");
+            
+            if (!anim.GetBool("jump") && !anim.GetBool("jumpRunning") && !anim.GetBool("roll") && anim.GetBool("running")){
+                anim.SetBool("roll", true);
+                rollTimer = 2.5f;
+            }
         }
 
         if (Input.GetKey(KeyCode.S) && discoveredBigGun){
             haveSmallGun = !haveSmallGun;
         }
 
-        if (isInsideEnemy && timeSinceLastDamage > timeBetweenDamages){
+        /*if (isInsideEnemy && timeSinceLastDamage > timeBetweenDamages){
             timeSinceLastDamage = 0;
             hp -= 10;
             healthSlider.value = hp / 100.0f;
-        }
+        }*/
+
+        Debug.Log(anim.GetBool("roll"));
     }
 
     void shoot()
@@ -141,6 +149,11 @@ public class Player : MonoBehaviour
         //bullObj.transform.parent = GameObject.Find("Level").transform;
 
         if (lookingLeft()) RotateObjectAroundY(bullObj, 180f);
+        else {
+            // Other direction
+            Bullet script = bullObj.GetComponent<Bullet>();
+            script.negateSpeed();
+        }
 
         // Update ammo bar
         if (haveSmallGun) ammo = ammo - 1;
@@ -164,7 +177,7 @@ public class Player : MonoBehaviour
     void OnCollisionEnter(Collision collision)
     {
         //Debug.LogWarning("Collision with " + collision.gameObject.tag);
-        if (collision.gameObject.tag == "Block")
+        if (collision.gameObject.tag == "Block" || collision.gameObject.tag == "Turret")
         {
 
             Vector3 normal = collision.contacts[0].normal;
@@ -193,7 +206,6 @@ public class Player : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.Space)) {
                 onElevator = true;
-                Debug.Log("Collision player-elevator");
             }
         }
         else if (other.CompareTag("Enemy-Low-HP")){
@@ -209,10 +221,25 @@ public class Player : MonoBehaviour
         }
         else if (other.CompareTag("Enemy"))
         {
+            if (isInvincible()) return;
             isInsideEnemy = true;
-            timeSinceLastDamage = 0f;
+            timeSinceLastDamage = 0;
+            hp -= 10;
+            healthSlider.value = hp / 100.0f;
         }
+        else if (other.CompareTag("Bullet"))
+        {
+            Bullet otherBull = other.GetComponent<Bullet>();
+            if (otherBull.getIsEnemy()) {
+                if (!isInvincible()){
+                    timeSinceLastDamage = 0f;
+                    hp -= 10;
+                    healthSlider.value = hp / 100.0f;
 
+                }
+                Destroy(other.gameObject);
+            }
+        }
     }
 
     void OnTriggerExit(Collider other){
@@ -221,7 +248,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionExit(Collision collision)
     {
-        if (collision.gameObject.tag == "Block"){
+        if (collision.gameObject.tag == "Block" || collision.gameObject.tag == "Turret"){
             canRotateLeft = true;
             canRotateRight = true;
         }
@@ -231,6 +258,7 @@ public class Player : MonoBehaviour
 
     public void jump(){
         if (canJumpTimer > 0) return;
+        if (anim.GetBool("roll")) return; // Cant jump while evading
 
         // Perform a Jump
         GetComponent<Rigidbody>().AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
@@ -269,5 +297,10 @@ public class Player : MonoBehaviour
         }
         return false;
         //transform.Translate(directionToOrigin * center * Time.deltaTime);
+    }
+
+    bool isInvincible()
+    {
+        return anim.GetBool("roll"); // Haurem de afegir la tecla G
     }
 }
