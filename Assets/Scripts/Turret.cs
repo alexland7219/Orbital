@@ -25,7 +25,8 @@ public class Turret : MonoBehaviour
     private const float totalTime = 180.0f / 40.0f;
     Health_Bar healthBarComponent;
     private int nCubes;
-    private int hp;
+    public int hp;
+    public int shield;
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +39,7 @@ public class Turret : MonoBehaviour
         rotationStartedLow = false;
         nCubes = 4;
         hp = 100;
+        shield = 100;
 
         flipLow = true;
         flipMid = true;
@@ -51,6 +53,7 @@ public class Turret : MonoBehaviour
     void Update()
     {
         if (hp != healthBarComponent.health) healthBarComponent.health = hp;
+        if (shield != healthBarComponent.shield) healthBarComponent.shield = shield;
         if (hp <= 0) die();
 
         rotateLowTimer -= Time.deltaTime;
@@ -142,7 +145,8 @@ public class Turret : MonoBehaviour
 
             Bullet otherBull = other.GetComponent<Bullet>();
             if (!otherBull.getIsEnemy()) {
-                hp -= 20;
+                if (shield <= 0) hp -= 20;
+                else shield -= 20;
                 Destroy(other.gameObject);
             }
         }

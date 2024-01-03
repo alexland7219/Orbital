@@ -6,7 +6,7 @@ public class flyingEnemy : MonoBehaviour
 {
     public float rotSpeed;
     public int hp;
-    public bool shieldOn;
+    public int shield;
 
     private int nCubes;
 
@@ -27,7 +27,7 @@ public class flyingEnemy : MonoBehaviour
     {
         rotSpeed = 20.0f;
         hp = 100;
-        shieldOn = true;
+        shield = 100;
         timeToSpawnChild = 3.0f;
         nCubes = 4;
         initialHeight = transform.position.y;
@@ -45,6 +45,7 @@ public class flyingEnemy : MonoBehaviour
         transform.RotateAround(Vector3.zero, Vector3.up, rotSpeed * Time.deltaTime);
 
         if (hp != healthBarComponent.health) healthBarComponent.health = hp;
+        if (shield != healthBarComponent.shield) healthBarComponent.shield = shield;
 
         if (Input.GetKey(KeyCode.H) && invincible <= 0)
         {
@@ -66,7 +67,8 @@ public class flyingEnemy : MonoBehaviour
 
             Bullet otherBull = other.GetComponent<Bullet>();
             if (!otherBull.getIsEnemy()) {
-                hp -= 20;
+                if (shield <= 0) hp -= 20;
+                else shield -= 20;
                 Destroy(other.gameObject);
             }
         }

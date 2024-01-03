@@ -47,19 +47,19 @@ public class ElevatorV : MonoBehaviour
         if (moving) {
             if (totalTime > 3 * Time.deltaTime)
             {
-                Debug.Log("IF - Quenden " + totalTime + " segons");
+                //Debug.Log("IF - Quenden " + totalTime + " segons");
                 transform.Translate(direction * 3 * Time.deltaTime);
                 totalTime -= 3 * Time.deltaTime;
             }
             else {
-                Debug.Log("ELSE - Quenden " + totalTime + " segons");
+                //Debug.Log("ELSE - Quenden " + totalTime + " segons");
                 transform.Translate(direction * totalTime);
                 totalTime = -1;
             }
         }
 
         if (moving && totalTime < 0){
-            Debug.Log("Para de moures");
+            //Debug.Log("Para de moures");
             moving = false;
             started = false;
             totalTime = 11.4226939f;

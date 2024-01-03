@@ -5,14 +5,16 @@ public class walkingEnemy : MonoBehaviour
 {
     public float rotSpeed;
     public int hp;
-    public bool shieldOn;
+    public int shield;
     public float angle;
+    public float maxangle;
 
     private float invincible;
     private float oldrotSpeed;
     private float deathTimer;
     private float stopTimer;
     private bool stopped;
+    private GameObject playergameObject;
 
     Animator anim;
     Health_Bar healthBarComponent;
@@ -22,7 +24,7 @@ public class walkingEnemy : MonoBehaviour
     {
         rotSpeed = 15.0f;
         hp = 100;
-        shieldOn = true;
+        shield = 100;
         angle = 0;
         healthBarComponent = gameObject.transform.Find("HealthCanvas/HealthBar").gameObject.GetComponent<Health_Bar>();
         anim = GetComponent<Animator>();
@@ -31,17 +33,13 @@ public class walkingEnemy : MonoBehaviour
         deathTimer = 2.0f;
         stopped = false;
         stopTimer = 5.0f;
+        playergameObject = GameObject.Find("T-Pose");
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (angle > 90 || angle < 0) { 
-            rotSpeed = -rotSpeed;
-            transform.Rotate(new Vector3(0, 180, 0));
-        }
-
-        if (!stopped && Vector3.Distance(new Vector3(-8.56129646f, 12.5699997f, 0), transform.position) < 5 && isgettingCloser()) {
+        if (!stopped && Vector3.Distance(playergameObject.transform.position, transform.position) < 5 && isgettingCloser()) {
 
             /////////
             //    Aqui s'aur� de posar la posicio exacta del jugador
@@ -66,7 +64,17 @@ public class walkingEnemy : MonoBehaviour
         transform.RotateAround(Vector3.zero, Vector3.up, rotSpeed * Time.deltaTime);
         angle += rotSpeed * Time.deltaTime;
 
+        if ((angle > maxangle || angle < 0) && !stopped)
+        {
+            rotSpeed = -rotSpeed;
+            transform.Rotate(new Vector3(0, 180, 0));
+            transform.RotateAround(Vector3.zero, Vector3.up, rotSpeed * Time.deltaTime);
+            angle += rotSpeed * Time.deltaTime;
+        }
+
         if (hp != healthBarComponent.health) healthBarComponent.health = hp;
+        if (shield != healthBarComponent.shield) healthBarComponent.shield = shield;
+
 
         if (Input.GetKey(KeyCode.D) && invincible <= 0)
         {
@@ -99,7 +107,8 @@ public class walkingEnemy : MonoBehaviour
                 
                 anim.SetTrigger("GetHit");
 
-                hp -= 20;
+                if (shield <= 0) hp -= 20;
+                else shield -= 20;
                 if (hp <= 20)
                 {
                     if (hp > 0) anim.SetBool("1HP", true);

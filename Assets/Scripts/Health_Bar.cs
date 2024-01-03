@@ -6,13 +6,16 @@ using UnityEngine.UI;
 public class Health_Bar : MonoBehaviour
 {
     public Slider healthSlider;
+    public Slider shieldSlider;
     public Slider easehealthSlider;
     public float health;
+    public float shield;
     private float lerpSpeed = 0.01f;
 
     // Start is called before the first frame update
     void Start()
     {
+        shield = 100;
         health = 100;
     }
 
@@ -20,8 +23,10 @@ public class Health_Bar : MonoBehaviour
     void Update()
     {
         //Debug.Log((healthSlider != null) + " " + (easehealthSlider != null));
-        if (healthSlider != null && easehealthSlider != null) {
+        if (healthSlider != null && easehealthSlider != null && shieldSlider != null) {
             if (healthSlider.value != health) { healthSlider.value = health; }
+
+            if (shieldSlider.value != shield) { shieldSlider.value = shield; }
 
             if (easehealthSlider.value != healthSlider.value) { easehealthSlider.value = Mathf.Lerp(easehealthSlider.value, health, lerpSpeed); }
         }

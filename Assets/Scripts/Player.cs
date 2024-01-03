@@ -129,7 +129,7 @@ public class Player : MonoBehaviour
             healthSlider.value = hp / 100.0f;
         }*/
 
-        Debug.Log(anim.GetBool("roll"));
+        //Debug.Log(anim.GetBool("roll"));
     }
 
     void shoot()
