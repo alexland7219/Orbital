@@ -16,8 +16,12 @@ TagManager:
   - Animated
   - Checkpoint
   - Turret
+<<<<<<< HEAD
   - Punch
   - Rock
+=======
+  - Walls
+>>>>>>> master
   layers:
   - Default
   - TransparentFX

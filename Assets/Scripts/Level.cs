@@ -7,6 +7,7 @@ public class Level : MonoBehaviour
     private float rotSpeed = 40f;
     public Player player; // Player is the script attached to the Player object
     private float punchTimer;
+    public GameObject walls;
 
     // Start is called before the first frame update
     void Start()
@@ -26,6 +27,9 @@ public class Level : MonoBehaviour
         if (player.canRotateLeft && Input.GetKey(KeyCode.LeftArrow) && !player.onElevator && player.dirToGo == "none"){
             // Rotate everything around the Y axis
             transform.Rotate(Vector3.up, - rotSpeed * Time.deltaTime);
+
+            walls.transform.Rotate(Vector3.up, - 0.2f * rotSpeed * Time.deltaTime);
+
             player.canRotateRight = true;
             player.anim.SetBool("running", true);
             //Debug.Log("turning");
@@ -41,6 +45,8 @@ public class Level : MonoBehaviour
         {
             // Rotate CCW around Y-axis
             transform.Rotate(Vector3.up, rotSpeed * Time.deltaTime);
+            walls.transform.Rotate(Vector3.up, 0.2f * rotSpeed * Time.deltaTime);
+
             player.canRotateLeft = true;
             player.anim.SetBool("running", true);
 
@@ -77,8 +83,6 @@ public class Level : MonoBehaviour
             player.jump();
             player.isGrounded = false;
         }
-
-        if (Input.GetKey(KeyCode.Escape)) Application.Quit();
 
     }
 }
