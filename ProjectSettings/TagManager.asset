@@ -16,6 +16,8 @@ TagManager:
   - Animated
   - Checkpoint
   - Turret
+  - Punch
+  - Rock
   layers:
   - Default
   - TransparentFX
