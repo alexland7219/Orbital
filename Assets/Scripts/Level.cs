@@ -24,6 +24,7 @@ public class Level : MonoBehaviour
     {
         if (player.dirToGo == "left") { transform.Rotate(Vector3.up, -rotSpeed/10.0f * Time.deltaTime); }
         else if (player.dirToGo == "right") { transform.Rotate(Vector3.up, rotSpeed/10.0f * Time.deltaTime); }
+
         if (player.canRotateLeft && Input.GetKey(KeyCode.LeftArrow) && !player.onElevator && player.dirToGo == "none"){
             // Rotate everything around the Y axis
             transform.Rotate(Vector3.up, - rotSpeed * Time.deltaTime);
@@ -32,7 +33,7 @@ public class Level : MonoBehaviour
 
             player.canRotateRight = true;
             player.anim.SetBool("running", true);
-            //Debug.Log("turning");
+            Debug.Log("TURNING LEFT");
 
             // Update Y rotation on Samus
             if (player.transform.localScale.z < 0){
@@ -46,6 +47,7 @@ public class Level : MonoBehaviour
             // Rotate CCW around Y-axis
             transform.Rotate(Vector3.up, rotSpeed * Time.deltaTime);
             walls.transform.Rotate(Vector3.up, 0.2f * rotSpeed * Time.deltaTime);
+            Debug.Log("TURNING RIGHT");
 
             player.canRotateLeft = true;
             player.anim.SetBool("running", true);
@@ -65,7 +67,7 @@ public class Level : MonoBehaviour
             player.anim.SetBool("running", false);
             player.anim.SetBool("jumpRunning", false);
         }
-
+        
         if (player.dirToGo == "punchleft" && player.canRotateLeft)
         {
             Debug.Log("Entro");

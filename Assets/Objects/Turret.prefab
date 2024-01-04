@@ -440,7 +440,6 @@ GameObject:
   - component: {fileID: 3235864999288387403}
   - component: {fileID: 6489136915817535347}
   - component: {fileID: 3673035338870774101}
-  - component: {fileID: 3936183739113324009}
   m_Layer: 0
   m_Name: Mid-cillinder
   m_TagString: Untagged
@@ -513,29 +512,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &3936183739113324009
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4160651348886552742}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &4893405993890775366
 GameObject:
   m_ObjectHideFlags: 0
@@ -635,7 +611,6 @@ GameObject:
   - component: {fileID: 522528258616261687}
   - component: {fileID: 2989014473637676708}
   - component: {fileID: 5606328612688035553}
-  - component: {fileID: 2021247731032032985}
   m_Layer: 0
   m_Name: Mid-cillinder
   m_TagString: Untagged
@@ -708,29 +683,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2021247731032032985
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4932921089881958576}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &6007725373632319055
 GameObject:
   m_ObjectHideFlags: 0
@@ -779,8 +731,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   healthSlider: {fileID: 5304223984848826712}
+  shieldSlider: {fileID: 0}
   easehealthSlider: {fileID: 8975960739916951540}
   health: 0
+  shield: 0
 --- !u!114 &2635289888905170564
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -971,7 +925,6 @@ GameObject:
   - component: {fileID: 1660667054053152667}
   - component: {fileID: 3042960029414693759}
   - component: {fileID: 811949773461756536}
-  - component: {fileID: 2504985862344751642}
   m_Layer: 0
   m_Name: midgun
   m_TagString: Untagged
@@ -1044,29 +997,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2504985862344751642
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6772303757567957343}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &6837258653704400954
 GameObject:
   m_ObjectHideFlags: 0
@@ -1186,7 +1116,6 @@ GameObject:
   - component: {fileID: 2203282093019642284}
   - component: {fileID: 3447637320996284768}
   - component: {fileID: 812857614217979436}
-  - component: {fileID: 7522179293252470195}
   m_Layer: 0
   m_Name: lowgun
   m_TagString: Untagged
@@ -1259,29 +1188,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &7522179293252470195
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7544424477801689171}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!1 &7780082024476794749
 GameObject:
   m_ObjectHideFlags: 0
@@ -1414,6 +1320,8 @@ MonoBehaviour:
   topSlice: {fileID: 6951698524576867747}
   midSlice: {fileID: 2996155235984273211}
   lowSlice: {fileID: 2092527162738959619}
+  hp: 0
+  shield: 0
 --- !u!65 &6633118192908715911
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -1515,7 +1423,6 @@ GameObject:
   - component: {fileID: 425605916243444066}
   - component: {fileID: 2501337853398273893}
   - component: {fileID: 2474111449450807224}
-  - component: {fileID: 2977366852211128520}
   m_Layer: 0
   m_Name: topgun
   m_TagString: Untagged
@@ -1588,26 +1495,3 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!136 &2977366852211128520
-CapsuleCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8423909295252425486}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Radius: 0.5000001
-  m_Height: 2
-  m_Direction: 1
-  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}

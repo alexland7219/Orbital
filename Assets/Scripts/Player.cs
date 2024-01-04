@@ -205,8 +205,10 @@ public class Player : MonoBehaviour
         //Debug.LogWarning("Collision with " + collision.gameObject.tag);
         if (collision.gameObject.tag == "Block" || collision.gameObject.tag == "Turret")
         {
-
             Vector3 normal = collision.contacts[0].normal;
+
+
+            Debug.Log("NORMAL" + normal);
 
             if (normal.y == 1)
             {
@@ -215,9 +217,14 @@ public class Player : MonoBehaviour
                 anim.SetBool("jump", false);
                 anim.SetBool("jumpRunning", false);
             }
-            else if (normal.z == -1) canRotateLeft = false;
-            else if (normal.z == +1) canRotateRight = false;
-
+            else if (normal.z < -0.95f){
+                canRotateLeft = false;
+                Debug.Log("Cant rotate left");
+            }
+            else if (normal.z > 0.95f) {
+                canRotateRight = false;
+                Debug.Log("Cant rotate right");
+            }
         }
         else if (collision.gameObject.tag == "Ammo"){
             ammo = 32;
@@ -306,6 +313,7 @@ public class Player : MonoBehaviour
         if (collision.gameObject.tag == "Block" || collision.gameObject.tag == "Turret"){
             canRotateLeft = true;
             canRotateRight = true;
+            Debug.Log("Exiting collision");
         }
 
         if (!checkGrounded()) isGrounded = false;
