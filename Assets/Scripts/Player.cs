@@ -266,6 +266,17 @@ public class Player : MonoBehaviour
             hp -= 10;
             healthSlider.value = hp / 100.0f;
         }
+        else if (other.CompareTag("Punch"))
+        {
+            if (isInvincible()) return;
+            isInsideEnemy = true;
+            timeSinceLastDamage = 0;
+            hp -= 5;
+            healthSlider.value = hp / 100.0f;
+            Rigidbody rb = GetComponent<Rigidbody>();
+            dirToGo = "punchleft";
+            rb.AddForce(Vector3.up * 4000);
+        }
         else if (other.CompareTag("Bullet"))
         {
             Bullet otherBull = other.GetComponent<Bullet>();
@@ -278,6 +289,11 @@ public class Player : MonoBehaviour
                 }
                 Destroy(other.gameObject);
             }
+        }
+        else if (other.CompareTag("Rock"))
+        {
+            Rock script = other.GetComponent<Rock>();
+            script.die();
         }
     }
 

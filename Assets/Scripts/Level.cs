@@ -6,6 +6,7 @@ public class Level : MonoBehaviour
 {
     private float rotSpeed = 40f;
     public Player player; // Player is the script attached to the Player object
+    private float punchTimer;
     public GameObject walls;
 
     // Start is called before the first frame update
@@ -14,6 +15,7 @@ public class Level : MonoBehaviour
         if (player == null){
             player = GameObject.FindObjectOfType<Player>();
         }
+        punchTimer = 0f;
 
     }
 
@@ -22,7 +24,7 @@ public class Level : MonoBehaviour
     {
         if (player.dirToGo == "left") { transform.Rotate(Vector3.up, -rotSpeed/10.0f * Time.deltaTime); }
         else if (player.dirToGo == "right") { transform.Rotate(Vector3.up, rotSpeed/10.0f * Time.deltaTime); }
-        if (player.canRotateLeft && Input.GetKey(KeyCode.LeftArrow) && !player.onElevator){
+        if (player.canRotateLeft && Input.GetKey(KeyCode.LeftArrow) && !player.onElevator && player.dirToGo == "none"){
             // Rotate everything around the Y axis
             transform.Rotate(Vector3.up, - rotSpeed * Time.deltaTime);
 
@@ -39,7 +41,8 @@ public class Level : MonoBehaviour
                 player.transform.localScale = newScale;
             }
         }
-        else if (player.canRotateRight && Input.GetKey(KeyCode.RightArrow) && !player.onElevator){
+        else if (player.canRotateRight && Input.GetKey(KeyCode.RightArrow) && !player.onElevator && player.dirToGo == "none")
+        {
             // Rotate CCW around Y-axis
             transform.Rotate(Vector3.up, rotSpeed * Time.deltaTime);
             walls.transform.Rotate(Vector3.up, 0.2f * rotSpeed * Time.deltaTime);
@@ -55,10 +58,25 @@ public class Level : MonoBehaviour
             }
 
         }
-        else if (player.anim.GetBool("running")){
+
+        else if (player.anim.GetBool("running"))
+        {
             // Stopped running
-            player.anim.SetBool("running",false);
+            player.anim.SetBool("running", false);
             player.anim.SetBool("jumpRunning", false);
+        }
+
+        if (player.dirToGo == "punchleft" && player.canRotateLeft)
+        {
+            Debug.Log("Entro");
+            transform.Rotate(Vector3.up, -rotSpeed * 2 * Time.deltaTime);
+            punchTimer += Time.deltaTime;
+        }
+
+        if (punchTimer > 0.5f && player.isGrounded)
+        {
+            punchTimer = 0;
+            player.dirToGo = "none";
         }
 
         if (Input.GetKey(KeyCode.UpArrow) && player.isGrounded){

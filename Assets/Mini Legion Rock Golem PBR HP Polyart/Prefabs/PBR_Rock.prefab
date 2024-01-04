@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 5110569511368032360}
   m_Layer: 0
   m_Name: PBR_Rock
-  m_TagString: Untagged
+  m_TagString: Rock
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -147,6 +147,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 065a52e2ef2696f4f8cea1b7afa5c77d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  empty: {fileID: 710641196785780740, guid: 6bfe3fa9c29a6d749ab1732c3747fa15, type: 3}
 --- !u!65 &5110569511368032360
 BoxCollider:
   m_ObjectHideFlags: 0
