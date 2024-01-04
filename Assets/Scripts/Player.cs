@@ -4,6 +4,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using System;
 using UnityEngine.UI;
+using TMPro; // Import the TextMeshPro namespace
+
 public class Player : MonoBehaviour
 {
     public bool canRotateLeft;
@@ -19,20 +21,26 @@ public class Player : MonoBehaviour
 
     public GameObject bulletObject;
     public GameObject smallBulletObject;
+    public TextMeshProUGUI counterObject;
+    public TextMeshProUGUI weaponNameObject;
+    public Image weaponNameImageBg;
+    public GameObject floatingGun;
 
     private Slider healthSlider;
     private Slider ammoSlider;
     public float timeSinceLastDamage;
     public const float timeBetweenDamages = 0.5f;
 
-    public bool haveSmallGun;
+    private bool haveSmallGun;
     public bool discoveredBigGun;
 
     private int hp;
     private int ammo;
     private bool isInsideEnemy;
+    private bool checkpointVisited;
 
     private float rollTimer;
+    private float changeWeaponTimer;
 
     // Start is called before the first frame update
     void Start()
@@ -40,12 +48,14 @@ public class Player : MonoBehaviour
         canRotateRight = true;
         canRotateLeft = true;
         discoveredBigGun = false;
+        checkpointVisited = false;
         isGrounded = false;
         timeSinceLastDamage = 0;
         onElevator = false;
         haveSmallGun = true;
         dirToGo = "none";
         canShootTimer = 0.5f;
+        changeWeaponTimer = 0.5f;
         anim = GetComponent<Animator>();
         canJumpTimer = 0;
         directionToOrigin = Vector3.Normalize(Vector3.zero - transform.position);
@@ -56,6 +66,8 @@ public class Player : MonoBehaviour
         healthSlider = GameObject.FindWithTag("Healthbar").GetComponent<Slider>();
         ammoSlider = GameObject.FindWithTag("AmmoBar").GetComponent<Slider>();
         isInsideEnemy = false;
+
+        counterObject.text = "32";
     }
 
     private bool checkGrounded(){
@@ -77,6 +89,8 @@ public class Player : MonoBehaviour
     void Update()
     {
         timeSinceLastDamage += Time.deltaTime;
+        if (changeWeaponTimer > 0) changeWeaponTimer -= Time.deltaTime;
+ 
         if (anim.GetBool("roll")) {
             rollTimer -= Time.deltaTime;
             if (rollTimer < 0) anim.SetBool("roll", false);
@@ -119,8 +133,18 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (Input.GetKey(KeyCode.S) && discoveredBigGun){
+        if (Input.GetKey(KeyCode.S) && discoveredBigGun && changeWeaponTimer <= 0){
             haveSmallGun = !haveSmallGun;
+            changeWeaponTimer = 0.5f;
+            if (haveSmallGun) 
+            {
+                weaponNameObject.text = "SHORT";
+                weaponNameImageBg.color = new Color(0f, 172f/255f, 1f);
+            }
+            else {
+                weaponNameObject.text = "LONG";
+                weaponNameImageBg.color = new Color(158f/255f, 90f/255f, 1f);
+            }
         }
 
         /*if (isInsideEnemy && timeSinceLastDamage > timeBetweenDamages){
@@ -159,6 +183,8 @@ public class Player : MonoBehaviour
         if (haveSmallGun) ammo = ammo - 1;
         else ammo -= 2;
 
+        counterObject.text = ammo.ToString();
+
         ammoSlider.value = ammo / 32.0f;
     }
 
@@ -196,6 +222,10 @@ public class Player : MonoBehaviour
         else if (collision.gameObject.tag == "Ammo"){
             ammo = 32;
             ammoSlider.value = ammo / 32.0f;
+
+
+            counterObject.text = ammo.ToString();
+
             Destroy(collision.gameObject);
         }
     }
@@ -212,12 +242,21 @@ public class Player : MonoBehaviour
             hp -= 2;
             healthSlider.value = hp / 100.0f;
         }   
-        else if (other.CompareTag("Checkpoint"))
+        else if (other.CompareTag("Checkpoint") && !checkpointVisited)
         {
             ammo = 32;
+            counterObject.text = ammo.ToString();
+
             ammoSlider.value = ammo / 32.0f;
             discoveredBigGun = true;
             haveSmallGun = false;
+
+            weaponNameObject.text = "LONG";
+            weaponNameImageBg.color = new Color(158f/255f, 90f/255f, 1f);
+
+            checkpointVisited = true;
+            Destroy(floatingGun);
+
         }
         else if (other.CompareTag("Enemy"))
         {

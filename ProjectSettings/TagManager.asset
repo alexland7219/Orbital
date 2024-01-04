@@ -16,6 +16,7 @@ TagManager:
   - Animated
   - Checkpoint
   - Turret
+  - Walls
   layers:
   - Default
   - TransparentFX

@@ -14,26 +14,25 @@ Easy   = Música
 
 Dimarts
 ===========
-Dos Nivells Armadura - W
+Dos Nivells Armadura - W [DONE]
 Tercer Enemic        - R [DONE]
 Esquiva              - R [DONE]
-Boss                 - W
+Boss                 - W [en ello]
 Música               - R [to do]
-Background           - R [maybe]
+Background           - R [DONE]
 
-Dimecres
+Dimecres / Dijous
 ==========
 Música               - R + W
-Boss	             - R + W
+Boss	             - R + W [en ello]
 Planta 2'            - R
-G + X	             - R/w	
-UI	             - R + W
+G + X	             - R/w
+UI	             - R + W [en ello]
 Level Design         - R + W
 
-Dijous + Divendes
+Dissabte i Diumenge
 =========
 
 Memoria
-UI
 Level Design
 Entrega
