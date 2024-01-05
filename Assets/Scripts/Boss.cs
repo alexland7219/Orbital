@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEditor;
@@ -9,56 +9,172 @@ public class Boss : MonoBehaviour
 
 {
     public GameObject rockObject;
+    public GameObject player;
     private GameObject hand;
     private GameObject rock;
+    private Animator anim;
     private bool throwing;
     private float rotSpeed;
     private float oldrotSpeed;
     public bool turning;
-    private float dirTimer;
     private float turnTimer;
     private float targetangle;
     private float r;
     private float lerpSpeed = 0.001f;
     private float angle;
+    private float anglestart;
+    public bool punchHasStrength;
+
+    Health_Bar healthBarComponent;
+    public int hp;
+    public int shield;
+    private bool first, second, third, dead;
 
 
     // Start is called before the first frame update
     void Start()
     {
+
+        hp = 1000;
+        shield = 0;
         hand = GameObject.Find("RockPoint");
         rotSpeed = 15.0f;
-        dirTimer = 0;
         turnTimer = 2.0f;
         turning = false;
-        angle = 0f; 
+        angle = 0f;
+        anim = GetComponent<Animator>();
+        oldrotSpeed = rotSpeed;
+        punchHasStrength = false;
+        healthBarComponent = gameObject.transform.Find("HealthCanvasBoss/HealthBar").gameObject.GetComponent<Health_Bar>();
+        first = second = third = dead = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        /*if (dirTimer > 5.0f && !turning)
+        if (!dead)
         {
-            oldrotSpeed = rotSpeed;
-            rotSpeed = 0;
-            turning = true;
-            targetangle = -transform.rotation.y;
-        }*/
-        if (turning) {
-            transform.Rotate(0, 0.5f, 0);
-            angle += 0.5f;
-            Debug.Log(angle);
-            if (angle == 180) {
-                turning = false;
-                dirTimer = 0;
-                rotSpeed = -oldrotSpeed;
-                angle = 0;
+            float dist = Vector3.Distance(player.transform.position, transform.position);
+            //Debug.Log(dist);
+            if (dist > 14.5f && !anim.GetBool("Throw"))
+            {
+                anim.SetBool("Throw", true);
+                anim.SetBool("Walk", false);
+                anim.SetBool("Punch", false);
+                //oldrotSpeed = rotSpeed;
+                rotSpeed = 0;
             }
+
+            else if (dist > 3.0f && !anim.GetBool("Walk") && !anim.GetBool("Throw") && !anim.GetBool("Punch") && !anim.GetBool("Hit"))
+            {
+                anim.SetBool("Walk", true);
+            }
+
+            else if (dist <= 3.0f && !anim.GetBool("Punch"))
+            {
+                Debug.Log("Punchable");
+                anim.SetBool("Punch", true);
+                anim.SetBool("Walk", false);
+                anim.SetBool("Throw", false);
+                rotSpeed = 0;
+            }
+
+            if (anim.GetBool("Walk"))
+            {
+                if (transform.position.z <= 0) rotSpeed = 15.0f;
+                else rotSpeed = -15.0f;
+
+                if (!isgettingCloser() && !turning)
+                {
+                    Debug.Log("GOLEM HAS TO TURN AROUND " + rotSpeed + " " + transform.position.z);
+                    turning = true;
+                    rotSpeed = 0;
+                    anglestart = angle;
+                }
+
+                if (turning)
+                {
+                    if (anglestart == 0)
+                    {
+                        transform.Rotate(0, 0.5f, 0);
+                        angle += 0.5f;
+                        //Debug.Log(angle);
+                        if (angle == 180f)
+                        {
+                            rotSpeed = -15.0f;
+                            turning = false;
+                        }
+                    }
+                    else
+                    {
+                        transform.Rotate(0, 0.5f, 0);
+                        angle -= 0.5f;
+                        //Debug.Log(angle);
+                        if (angle == 0f)
+                        {
+                            rotSpeed = 15.0f;
+                            turning = false;
+                        }
+                    }
+                }
+            }
+
+            /*if (anim.GetBool("Throw")) {
+                Vector3 targetdirection = player.transform.position;
+                targetdirection.y = 0;
+                Quaternion rotation = Quaternion.LookRotation(targetdirection);
+                transform.rotation = rotation;
+            }*/
+            transform.RotateAround(Vector3.zero, Vector3.up, rotSpeed * Time.deltaTime);
+            //Debug.Log(isgettingCloser());
         }
-        if (!turning)
+        if (hp != healthBarComponent.health) healthBarComponent.health = hp;
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Bullet"))
         {
-            //transform.RotateAround(Vector3.zero, Vector3.up, rotSpeed * Time.deltaTime);
-            dirTimer += Time.deltaTime;
+            Bullet otherBull = other.GetComponent<Bullet>();
+            if (!otherBull.getIsEnemy())
+            {
+
+                //anim.SetTrigger("GetHit");
+
+                if (shield <= 0) hp -= 100;
+                else shield -= 100;
+
+                if (!first && hp <= 750f) {
+                    first = true;
+                    anim.SetBool("Walk", false);
+                    anim.SetBool("Hit", true);
+                    rotSpeed = 0;
+                }
+
+                else if (!second && hp <= 500f)
+                {
+                    second = true;
+                    anim.SetBool("Walk", false);
+                    anim.SetBool("Hit", true);
+                    rotSpeed = 0;
+                }
+
+                else if (!third && hp <= 250f)
+                {
+                    third = true;
+                    anim.SetBool("Walk", false);
+                    anim.SetBool("Hit", true);
+                    rotSpeed = 0;
+                }
+
+                if (hp <= 0) {
+                    rotSpeed = 0;
+                    dead = true;
+                    anim.SetBool("Dead", true);
+                }
+
+                Destroy(other.gameObject);
+            }
         }
     }
 
@@ -74,7 +190,28 @@ public class Boss : MonoBehaviour
         rock = Instantiate(rockObject, hand.transform.position, hand.transform.rotation);
         rock.transform.localScale = new Vector3(0.0065f, 0.0065f, 0.0065f);
         rock.transform.SetParent(hand.transform);
+        anim.SetBool("Throw", false);
     }
 
-    //void activateWalk() { }
+    bool isgettingCloser()
+    {
+        if (angle == 0) return rotSpeed > 0;
+        else return rotSpeed < 0;
+    }
+
+    void setpunchStrength() { punchHasStrength = true; }
+
+    void unsetpunchStrength() { punchHasStrength = false; }
+
+    void setWalk() {
+        if (Vector3.Distance(player.transform.position, transform.position) > 3.0f) {
+            //Debug.Log("Entro");
+            anim.SetBool("Punch", false);
+            anim.SetBool("Walk", true);
+        }
+    }
+
+    void unsetHit() {
+        anim.SetBool("Hit", false);
+    }
 }

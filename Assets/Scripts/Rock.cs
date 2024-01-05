@@ -41,7 +41,10 @@ public class Rock : MonoBehaviour
         }
         transform.position += dir*speed * Time.deltaTime;
         timer += Time.deltaTime;
-        if (timer > 5.0f) Destroy(gameObject);
+        if (timer > 5.0f) {
+            Destroy(target);
+            Destroy(gameObject);
+        }
     }
 
 
@@ -64,7 +67,7 @@ public class Rock : MonoBehaviour
             for (int y = 0; y < 4; ++y)
                 for (int z = 0; z < 4; ++z)
                     CreateCube(new Vector3(x, y, z));
-
+        Destroy(target);
         Destroy(gameObject);
     }
 
