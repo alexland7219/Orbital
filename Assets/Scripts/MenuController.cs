@@ -5,15 +5,21 @@ using UnityEngine.SceneManagement;
 
 public class MenuController : MonoBehaviour
 {
+    public GameObject audioManager;
+
     public void StartGame()
     {
-        Debug.Log("HELLO");
-
+        Destroy(audioManager.gameObject);
         SceneManager.LoadScene(1);
     }
     public void OpenCredits()
     {
-        // Implement settings menu logic here.
+        SceneManager.LoadScene(2);
+    }
+
+    public void OpenInstructions(){
+        SceneManager.LoadScene(3);
+
     }
 
     public void ExitGame()

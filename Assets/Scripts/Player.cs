@@ -37,7 +37,7 @@ public class Player : MonoBehaviour
     private int hp;
     private int ammo;
     private bool isInsideEnemy;
-    private bool checkpointVisited;
+    //private bool checkpointVisited;
 
     private float rollTimer;
     private float changeWeaponTimer;
@@ -48,7 +48,7 @@ public class Player : MonoBehaviour
         canRotateRight = true;
         canRotateLeft = true;
         discoveredBigGun = false;
-        checkpointVisited = false;
+        //checkpointVisited = false;
         isGrounded = false;
         timeSinceLastDamage = 0;
         onElevator = false;
@@ -225,7 +225,7 @@ public class Player : MonoBehaviour
                 canRotateRight = false;
                 Debug.Log("Cant rotate right");
             }
-        }
+        }/*
         else if (collision.gameObject.tag == "Ammo"){
             ammo = 32;
             ammoSlider.value = ammo / 32.0f;
@@ -234,7 +234,7 @@ public class Player : MonoBehaviour
             counterObject.text = ammo.ToString();
 
             Destroy(collision.gameObject);
-        }
+        }*/
     }
 
     void OnTriggerEnter(Collider other)
@@ -248,8 +248,9 @@ public class Player : MonoBehaviour
         else if (other.CompareTag("Enemy-Low-HP")){
             hp -= 2;
             healthSlider.value = hp / 100.0f;
+            Debug.LogWarning("Collision with a trap");
         }   
-        else if (other.CompareTag("Checkpoint") && !checkpointVisited)
+        else if (other.CompareTag("Checkpoint"))
         {
             ammo = 32;
             counterObject.text = ammo.ToString();
@@ -261,10 +262,30 @@ public class Player : MonoBehaviour
             weaponNameObject.text = "LONG";
             weaponNameImageBg.color = new Color(158f/255f, 90f/255f, 1f);
 
-            checkpointVisited = true;
-            Destroy(floatingGun);
+            //checkpointVisited = true;
+            Destroy(other.gameObject);
 
         }
+        else if (other.CompareTag("Recharge"))
+        {
+            ammo = 32;
+            ammoSlider.value = ammo / 32.0f;
+
+
+            counterObject.text = ammo.ToString();
+
+            Destroy(other.gameObject);
+
+        }
+        else if (other.CompareTag("Hearts"))
+        {
+            hp = 100;
+            healthSlider.value =1.0f;
+
+            Destroy(other.gameObject);
+
+        }
+
         else if (other.CompareTag("Enemy"))
         {
             if (isInvincible()) return;

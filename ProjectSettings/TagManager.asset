@@ -3,7 +3,21 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Enemy
+  - Block
+  - Elevator
+  - AmmoBar
+  - Healthbar
+  - Bullet
+  - Rock
+  - Enemy-Low-HP
+  - Floor
+  - Turret
+  - Punch
+  - Checkpoint
+  - Recharge
+  - Hearts
   layers:
   - Default
   - TransparentFX
