@@ -19,12 +19,14 @@ public class Player : MonoBehaviour
     private float canShootTimer;
     private Vector3 directionToOrigin;
 
+    public GameObject golemObject;
     public GameObject bulletObject;
     public GameObject smallBulletObject;
     public TextMeshProUGUI counterObject;
     public TextMeshProUGUI weaponNameObject;
     public Image weaponNameImageBg;
     public GameObject floatingGun;
+    public GameObject audioMgr;
 
     private Slider healthSlider;
     private Slider ammoSlider;
@@ -41,6 +43,10 @@ public class Player : MonoBehaviour
 
     private float rollTimer;
     private float changeWeaponTimer;
+
+    private bool crashedagainstGolem;
+
+    private int level;
 
     // Start is called before the first frame update
     void Start()
@@ -66,6 +72,8 @@ public class Player : MonoBehaviour
         healthSlider = GameObject.FindWithTag("Healthbar").GetComponent<Slider>();
         ammoSlider = GameObject.FindWithTag("AmmoBar").GetComponent<Slider>();
         isInsideEnemy = false;
+        crashedagainstGolem = false;
+        level = 0;
 
         counterObject.text = "32";
     }
@@ -147,13 +155,29 @@ public class Player : MonoBehaviour
             }
         }
 
-        /*if (isInsideEnemy && timeSinceLastDamage > timeBetweenDamages){
-            timeSinceLastDamage = 0;
-            hp -= 10;
-            healthSlider.value = hp / 100.0f;
-        }*/
+        // Boss level is #6
+        if (level == 6)
+        {
+            Vector3 golemposnoy = new Vector3(golemObject.transform.position.x, 0f, golemObject.transform.position.z);
+            Vector3 playerposnoy = new Vector3(transform.position.x, 0f, transform.position.z);
 
-        //Debug.Log(anim.GetBool("roll"));
+            float dist = Vector3.Distance(golemposnoy, playerposnoy);
+            //Debug.Log("Distance: " + dist);
+            if (dist < 2.5)
+            {   if (!crashedagainstGolem) {
+                    if (golemObject.transform.position.z < 0) canRotateRight = false;
+                    else canRotateLeft = false;
+                    crashedagainstGolem = true;
+                }
+            }
+            else if (crashedagainstGolem) {
+                canRotateRight = true;
+                canRotateLeft = true;
+                crashedagainstGolem = false;
+            }
+
+        }
+
     }
 
     void shoot()
@@ -296,14 +320,17 @@ public class Player : MonoBehaviour
         }
         else if (other.CompareTag("Punch"))
         {
-            if (isInvincible()) return;
-            isInsideEnemy = true;
-            timeSinceLastDamage = 0;
-            hp -= 5;
-            healthSlider.value = hp / 100.0f;
-            Rigidbody rb = GetComponent<Rigidbody>();
-            dirToGo = "punchleft";
-            rb.AddForce(Vector3.up * 4000);
+            if (golemObject.GetComponent<Boss>().punchHasStrength) {
+                if (isInvincible()) return;
+                isInsideEnemy = true;
+                timeSinceLastDamage = 0;
+                hp -= 20;
+                healthSlider.value = hp / 100.0f;
+                Rigidbody rb = GetComponent<Rigidbody>();
+                if (other.gameObject.transform.position.z < 0) dirToGo = "punchleft";
+                else dirToGo = "punchright";
+                rb.AddForce(Vector3.up * 4000);
+            }
         }
         else if (other.CompareTag("Bullet"))
         {
@@ -321,6 +348,12 @@ public class Player : MonoBehaviour
         else if (other.CompareTag("Rock"))
         {
             Rock script = other.GetComponent<Rock>();
+            if (!isInvincible()) {
+                timeSinceLastDamage = 0f;
+                hp -= 10;
+                healthSlider.value = hp / 100.0f;
+            }
+            Destroy(other.gameObject);
             script.die();
         }
     }

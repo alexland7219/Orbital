@@ -5,6 +5,7 @@ using UnityEngine;
 public class MainAudioManager : MonoBehaviour
 {
     public AudioSource bgTheme;
+    public AudioSource shoot;
 
     void Start(){
         bgTheme.loop = true;
@@ -17,6 +18,10 @@ public class MainAudioManager : MonoBehaviour
 
     public void ResumeTheme(){
         bgTheme.UnPause();
+    }
+
+    public void PlayShootSound(){
+        shoot.Play();
     }
 
 }
