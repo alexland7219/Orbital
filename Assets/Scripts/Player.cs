@@ -26,6 +26,7 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI weaponNameObject;
     public Image weaponNameImageBg;
     public GameObject floatingGun;
+    public GameObject audioMgr;
 
     private Slider healthSlider;
     private Slider ammoSlider;
@@ -38,20 +39,22 @@ public class Player : MonoBehaviour
     private int hp;
     private int ammo;
     private bool isInsideEnemy;
-    private bool checkpointVisited;
+    //private bool checkpointVisited;
 
     private float rollTimer;
     private float changeWeaponTimer;
 
     private bool crashedagainstGolem;
 
+    private int level;
+
     // Start is called before the first frame update
     void Start()
     {
         canRotateRight = true;
         canRotateLeft = true;
-        discoveredBigGun = true;
-        checkpointVisited = false;
+        discoveredBigGun = false;
+        //checkpointVisited = false;
         isGrounded = false;
         timeSinceLastDamage = 0;
         onElevator = false;
@@ -70,6 +73,7 @@ public class Player : MonoBehaviour
         ammoSlider = GameObject.FindWithTag("AmmoBar").GetComponent<Slider>();
         isInsideEnemy = false;
         crashedagainstGolem = false;
+        level = 0;
 
         counterObject.text = "32";
     }
@@ -151,31 +155,29 @@ public class Player : MonoBehaviour
             }
         }
 
-        /*if (isInsideEnemy && timeSinceLastDamage > timeBetweenDamages){
-            timeSinceLastDamage = 0;
-            hp -= 10;
-            healthSlider.value = hp / 100.0f;
-        }*/
+        // Boss level is #6
+        if (level == 6)
+        {
+            Vector3 golemposnoy = new Vector3(golemObject.transform.position.x, 0f, golemObject.transform.position.z);
+            Vector3 playerposnoy = new Vector3(transform.position.x, 0f, transform.position.z);
 
-        //Debug.Log(anim.GetBool("roll"));
-
-        Vector3 golemposnoy = new Vector3(golemObject.transform.position.x, 0f, golemObject.transform.position.z);
-        Vector3 playerposnoy = new Vector3(transform.position.x, 0f, transform.position.z);
-
-        float dist = Vector3.Distance(golemposnoy, playerposnoy);
-        //Debug.Log("Distance: " + dist);
-        if (dist < 2.5)
-        {   if (!crashedagainstGolem) {
-                if (golemObject.transform.position.z < 0) canRotateRight = false;
-                else canRotateLeft = false;
-                crashedagainstGolem = true;
+            float dist = Vector3.Distance(golemposnoy, playerposnoy);
+            //Debug.Log("Distance: " + dist);
+            if (dist < 2.5)
+            {   if (!crashedagainstGolem) {
+                    if (golemObject.transform.position.z < 0) canRotateRight = false;
+                    else canRotateLeft = false;
+                    crashedagainstGolem = true;
+                }
             }
+            else if (crashedagainstGolem) {
+                canRotateRight = true;
+                canRotateLeft = true;
+                crashedagainstGolem = false;
+            }
+
         }
-        else if (crashedagainstGolem) {
-            canRotateRight = true;
-            canRotateLeft = true;
-            crashedagainstGolem = false;
-        }
+
     }
 
     void shoot()
@@ -247,7 +249,7 @@ public class Player : MonoBehaviour
                 canRotateRight = false;
                 Debug.Log("Cant rotate right");
             }
-        }
+        }/*
         else if (collision.gameObject.tag == "Ammo"){
             ammo = 32;
             ammoSlider.value = ammo / 32.0f;
@@ -256,7 +258,7 @@ public class Player : MonoBehaviour
             counterObject.text = ammo.ToString();
 
             Destroy(collision.gameObject);
-        }
+        }*/
     }
 
     void OnTriggerEnter(Collider other)
@@ -270,8 +272,9 @@ public class Player : MonoBehaviour
         else if (other.CompareTag("Enemy-Low-HP")){
             hp -= 2;
             healthSlider.value = hp / 100.0f;
+            Debug.LogWarning("Collision with a trap");
         }   
-        else if (other.CompareTag("Checkpoint") && !checkpointVisited)
+        else if (other.CompareTag("Checkpoint"))
         {
             ammo = 32;
             counterObject.text = ammo.ToString();
@@ -283,10 +286,30 @@ public class Player : MonoBehaviour
             weaponNameObject.text = "LONG";
             weaponNameImageBg.color = new Color(158f/255f, 90f/255f, 1f);
 
-            checkpointVisited = true;
-            Destroy(floatingGun);
+            //checkpointVisited = true;
+            Destroy(other.gameObject);
 
         }
+        else if (other.CompareTag("Recharge"))
+        {
+            ammo = 32;
+            ammoSlider.value = ammo / 32.0f;
+
+
+            counterObject.text = ammo.ToString();
+
+            Destroy(other.gameObject);
+
+        }
+        else if (other.CompareTag("Hearts"))
+        {
+            hp = 100;
+            healthSlider.value =1.0f;
+
+            Destroy(other.gameObject);
+
+        }
+
         else if (other.CompareTag("Enemy"))
         {
             if (isInvincible()) return;
