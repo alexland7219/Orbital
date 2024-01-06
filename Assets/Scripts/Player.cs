@@ -47,7 +47,7 @@ public class Player : MonoBehaviour
 
     private bool crashedagainstGolem;
 
-    private int level;
+    public int level;
 
     // Start is called before the first frame update
     void Start()
