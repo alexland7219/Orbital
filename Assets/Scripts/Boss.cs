@@ -32,6 +32,10 @@ public class Boss : MonoBehaviour
     private bool first, second, third, dead;
     private bool golemwalkSound;
 
+    public Player playerScript; // Script of the player
+    private bool spawned;
+    public int level; // IMPORTANT: TO CHANGE IN THE EDITOR
+
 
     // Start is called before the first frame update
     void Start()
@@ -43,6 +47,7 @@ public class Boss : MonoBehaviour
         rotSpeed = 15.0f;
         turnTimer = 2.0f;
         turning = false;
+        spawned = false;
         angle = 0f;
         anim = GetComponent<Animator>();
         oldrotSpeed = rotSpeed;
@@ -55,7 +60,14 @@ public class Boss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!dead && player.GetComponent<Player>().level == 6)
+        if (!spawned)
+        {
+            if (playerScript.getLevel() >= level) spawned = true;
+            else return;
+        }
+
+
+        if (!dead)
         {
             float dist = Vector3.Distance(player.transform.position, transform.position);
             Debug.Log(dist + " " + angle);

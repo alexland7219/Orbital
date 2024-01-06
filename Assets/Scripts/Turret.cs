@@ -28,6 +28,12 @@ public class Turret : MonoBehaviour
     public int hp;
     public int shield;
     // Start is called before the first frame update
+
+    public Player player; // Script of the player
+    private bool spawned;
+    public int level; // IMPORTANT: TO CHANGE IN THE EDITOR
+
+
     void Start()
     {
         rotateTopTimer = 5.0f;
@@ -45,6 +51,8 @@ public class Turret : MonoBehaviour
         flipMid = true;
         flipTop = false;
 
+        spawned = false;
+
         healthBarComponent = gameObject.transform.Find("HealthCanvas/HealthBar").gameObject.GetComponent<Health_Bar>();
 
     }
@@ -52,6 +60,13 @@ public class Turret : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!spawned)
+        {
+            if (player.getLevel() >= level) spawned = true;
+            else return;
+        }
+
+
         if (hp != healthBarComponent.health) healthBarComponent.health = hp;
         if (shield != healthBarComponent.shield) healthBarComponent.shield = shield;
         if (hp <= 0) die();

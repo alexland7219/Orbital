@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Transactions;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro; // Import the TextMeshPro namespace
 
 public class ElevatorV : MonoBehaviour
 {
@@ -11,8 +13,13 @@ public class ElevatorV : MonoBehaviour
     public bool player_triggering;
     public bool moving;
     public bool started;
+    public int level;
     public bool centered;
     private Vector3 direction;
+    private float timeLock;
+    public bool toLock;
+    public TextMeshProUGUI countdownText;
+    public GameObject countdownElem;
     // Start is called before the first frame update
     void Start()
     {
@@ -20,6 +27,7 @@ public class ElevatorV : MonoBehaviour
         moving = false;
         centered = false;
         started = false;
+        timeLock = 60f;
         totalTime = 11.4226939f;
         direction = Vector3.up;
 
@@ -32,9 +40,19 @@ public class ElevatorV : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (toLock && level == player.getLevel() && timeLock > 0)
+        {
+            countdownElem.SetActive(true);
+            timeLock -= Time.deltaTime;
+            countdownText.text = string.Format("00:{0:D2}", Mathf.RoundToInt(timeLock) % 60);
+            return;
+        }
+
         if (player_triggering && Input.GetKey(KeyCode.Space) && totalTime >= 0 && !started && !moving) {
             player.centerElevator(transform.position);
             started = true;
+            if (direction == Vector3.up) player.changeLevel(+1);
+            else player.changeLevel(-1);
         }
 
         if (started) centered = player.isCentered(transform.position);

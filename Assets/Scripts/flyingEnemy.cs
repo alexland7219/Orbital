@@ -14,6 +14,7 @@ public class flyingEnemy : MonoBehaviour
     public float frequency = 1.5f;  // Frequency of the sine wave
 
     private float startTime;
+    private bool spawned;
     private float invincible;
     public GameObject sonObject;
 
@@ -21,6 +22,9 @@ public class flyingEnemy : MonoBehaviour
     public float initialHeight;
 
     Health_Bar healthBarComponent;
+    public Player player; // Script of the player
+
+    public int level; // IMPORTANT: TO CHANGE IN THE EDITOR
 
     // Start is called before the first frame update
     void Start()
@@ -29,6 +33,7 @@ public class flyingEnemy : MonoBehaviour
         hp = 100;
         shield = 100;
         timeToSpawnChild = 3.0f;
+        spawned = false;
         nCubes = 4;
         initialHeight = transform.position.y;
         startTime = Time.time;
@@ -39,6 +44,12 @@ public class flyingEnemy : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!spawned)
+        {
+            if (player.getLevel() >= level) spawned = true;
+            else return;
+        }
+
         float yPos = amplitude * Mathf.Sin(2 * Mathf.PI * frequency * (Time.time - startTime));
 
         transform.position = new Vector3(transform.position.x, yPos + initialHeight, transform.position.z);
