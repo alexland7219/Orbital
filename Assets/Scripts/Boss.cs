@@ -10,6 +10,7 @@ public class Boss : MonoBehaviour
 {
     public GameObject rockObject;
     public GameObject player;
+    public GameObject audioMgr;
     private GameObject hand;
     private GameObject rock;
     private Animator anim;
@@ -29,6 +30,7 @@ public class Boss : MonoBehaviour
     public int hp;
     public int shield;
     private bool first, second, third, dead;
+    private bool golemwalkSound;
 
 
     // Start is called before the first frame update
@@ -47,15 +49,16 @@ public class Boss : MonoBehaviour
         punchHasStrength = false;
         healthBarComponent = gameObject.transform.Find("HealthCanvasBoss/HealthBar").gameObject.GetComponent<Health_Bar>();
         first = second = third = dead = false;
+        golemwalkSound = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!dead)
+        if (!dead && player.GetComponent<Player>().level == 6)
         {
             float dist = Vector3.Distance(player.transform.position, transform.position);
-            //Debug.Log(dist);
+            Debug.Log(dist + " " + angle);
             if (dist > 14.5f && !anim.GetBool("Throw"))
             {
                 anim.SetBool("Throw", true);
@@ -91,30 +94,31 @@ public class Boss : MonoBehaviour
                     rotSpeed = 0;
                     anglestart = angle;
                 }
+            }
 
-                if (turning)
+            if (turning)
+            {
+                rotSpeed = 0;
+                if (anglestart == 0)
                 {
-                    if (anglestart == 0)
+                    transform.Rotate(0, 0.5f, 0);
+                    angle += 0.5f;
+                    //Debug.Log(angle);
+                    if (angle == 180f)
                     {
-                        transform.Rotate(0, 0.5f, 0);
-                        angle += 0.5f;
-                        //Debug.Log(angle);
-                        if (angle == 180f)
-                        {
-                            rotSpeed = -15.0f;
-                            turning = false;
-                        }
+                        if (anim.GetBool("Walk")) rotSpeed = -15.0f;
+                        turning = false;
                     }
-                    else
+                }
+                else
+                {
+                    transform.Rotate(0, 0.5f, 0);
+                    angle -= 0.5f;
+                    //Debug.Log(angle);
+                    if (angle == 0f)
                     {
-                        transform.Rotate(0, 0.5f, 0);
-                        angle -= 0.5f;
-                        //Debug.Log(angle);
-                        if (angle == 0f)
-                        {
-                            rotSpeed = 15.0f;
-                            turning = false;
-                        }
+                        if (anim.GetBool("Walk")) rotSpeed = 15.0f;
+                        turning = false;
                     }
                 }
             }
@@ -207,11 +211,27 @@ public class Boss : MonoBehaviour
         if (Vector3.Distance(player.transform.position, transform.position) > 3.0f) {
             //Debug.Log("Entro");
             anim.SetBool("Punch", false);
-            anim.SetBool("Walk", true);
+            //anim.SetBool("Walk", true);
         }
     }
 
-    void unsetHit() {
-        anim.SetBool("Hit", false);
+    void unsetHit() { anim.SetBool("Hit", false); }
+
+    void stepSound() { audioMgr.GetComponent<MainAudioManager>().PlayGolemStepSound(); }
+
+    void damageSound(){ audioMgr.GetComponent<MainAudioManager>().PlayGolemDamageSound(); }
+
+    void deathSound() {
+        // S'HA DE CREAR AQUESTA FUNCIÓ
+        //audioMgr.GetComponent<MainAudioManager>().stopAllSounds();
+        audioMgr.GetComponent<MainAudioManager>().PlayGolemDeathSound();
     }
+
+    void fallSound() { audioMgr.GetComponent<MainAudioManager>().PlayGolemFallSound(); }
+
+    private void winMusic() { audioMgr.GetComponent<MainAudioManager>().PlayWinMusic(); }
+
+    private void puchSound() { audioMgr.GetComponent<MainAudioManager>().PlayGolemPunchSound(); }
+
+    private void swingSound() { audioMgr.GetComponent<MainAudioManager>().PlayGolemSwingSound(); }
 }

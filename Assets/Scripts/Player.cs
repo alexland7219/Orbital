@@ -46,7 +46,7 @@ public class Player : MonoBehaviour
 
     private bool crashedagainstGolem;
 
-    private int level;
+    public int level;
 
     // Start is called before the first frame update
     void Start()
@@ -73,7 +73,7 @@ public class Player : MonoBehaviour
         ammoSlider = GameObject.FindWithTag("AmmoBar").GetComponent<Slider>();
         isInsideEnemy = false;
         crashedagainstGolem = false;
-        level = 0;
+        level = 6;
 
         counterObject.text = "32";
     }
