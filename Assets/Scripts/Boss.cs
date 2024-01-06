@@ -30,6 +30,10 @@ public class Boss : MonoBehaviour
     public int shield;
     private bool first, second, third, dead;
 
+    public Player playerScript; // Script of the player
+    private bool spawned;
+    public int level; // IMPORTANT: TO CHANGE IN THE EDITOR
+
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +45,7 @@ public class Boss : MonoBehaviour
         rotSpeed = 15.0f;
         turnTimer = 2.0f;
         turning = false;
+        spawned = false;
         angle = 0f;
         anim = GetComponent<Animator>();
         oldrotSpeed = rotSpeed;
@@ -52,6 +57,13 @@ public class Boss : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!spawned)
+        {
+            if (playerScript.getLevel() >= level) spawned = true;
+            else return;
+        }
+
+
         if (!dead)
         {
             float dist = Vector3.Distance(player.transform.position, transform.position);

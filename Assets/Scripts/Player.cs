@@ -5,6 +5,7 @@ using UnityEngine;
 using System;
 using UnityEngine.UI;
 using TMPro; // Import the TextMeshPro namespace
+using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
@@ -96,6 +97,9 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (hp <= 0) SceneManager.LoadScene(4);
+
+
         timeSinceLastDamage += Time.deltaTime;
         if (changeWeaponTimer > 0) changeWeaponTimer -= Time.deltaTime;
  
@@ -155,7 +159,7 @@ public class Player : MonoBehaviour
             }
         }
 
-        // Boss level is #6
+        // BOSS LEVEL -- REALLY IMPORTANT
         if (level == 6)
         {
             Vector3 golemposnoy = new Vector3(golemObject.transform.position.x, 0f, golemObject.transform.position.z);
@@ -419,5 +423,15 @@ public class Player : MonoBehaviour
     bool isInvincible()
     {
         return anim.GetBool("roll"); // Haurem de afegir la tecla G
+    }
+
+    public void changeLevel(int dif)
+    {
+        level += dif;
+    }
+
+    public int getLevel()
+    {
+        return level;
     }
 }
