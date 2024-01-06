@@ -111,23 +111,25 @@ public class Boss : MonoBehaviour
             if (turning)
             {
                 rotSpeed = 0;
-                if (anglestart == 0)
+                if (anglestart <= 0)
                 {
-                    transform.Rotate(0, 0.5f, 0);
-                    angle += 0.5f;
+                    float torotate = 100f * Time.deltaTime;
+                    transform.Rotate(0, torotate, 0);
+                    angle += torotate;
                     //Debug.Log(angle);
-                    if (angle == 180f)
+                    if (angle >= 180f)
                     {
                         if (anim.GetBool("Walk")) rotSpeed = -15.0f;
                         turning = false;
                     }
                 }
                 else
-                {
-                    transform.Rotate(0, 0.5f, 0);
-                    angle -= 0.5f;
+                {   
+                    float torotate = 100f * Time.deltaTime;
+                    transform.Rotate(0, torotate, 0);
+                    angle -= torotate;
                     //Debug.Log(angle);
-                    if (angle == 0f)
+                    if (angle <= 0f)
                     {
                         if (anim.GetBool("Walk")) rotSpeed = 15.0f;
                         turning = false;
@@ -211,7 +213,7 @@ public class Boss : MonoBehaviour
 
     bool isgettingCloser()
     {
-        if (angle == 0) return rotSpeed > 0;
+        if (angle <= 0) return rotSpeed > 0;
         else return rotSpeed < 0;
     }
 
