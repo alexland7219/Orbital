@@ -104,109 +104,106 @@ public class Player : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (hp <= 0){
+        if (anim.GetBool("dead")) return;
+
+        if (hp <= 0 ){
             anim.SetBool("dead", true);
+            audioMgr.GetComponent<AudioManager>().PlayAtIndex(9);          
             audioMgr.GetComponent<AudioManager>().StopAtIndex(1); 
             audioMgr.GetComponent<AudioManager>().StopAtIndex(8);          
-            audioMgr.GetComponent<AudioManager>().PlayAtIndex(9);          
 
-            Invoke("DelayDeath", 10.0f);
+            Invoke("DelayDeath", 5.0f);
         } 
 
+        timeSinceLastDamage += Time.deltaTime;
+        if (changeWeaponTimer > 0) changeWeaponTimer -= Time.deltaTime;
 
-        if (!anim.GetBool("dead"))
+        if (anim.GetBool("roll"))
         {
-            timeSinceLastDamage += Time.deltaTime;
-            if (changeWeaponTimer > 0) changeWeaponTimer -= Time.deltaTime;
+            rollTimer -= Time.deltaTime;
+            if (rollTimer < 0) anim.SetBool("roll", false);
+        }
 
-            if (anim.GetBool("roll"))
+        if (canJumpTimer > 0) canJumpTimer -= Time.deltaTime;
+
+        // Check if we are grounded
+        if (!isGrounded && checkGrounded())
+        {
+            // Debug.Log("GROUNDING");
+            // We are grounded
+            isGrounded = true;
+            anim.SetBool("jump", false);
+            anim.SetBool("jumpRunning", false);
+        }
+
+        if (!anim.GetBool("shooting") && Input.GetKey(KeyCode.D))
+        {
+            anim.SetBool("shooting", true);
+            // Shoot
+            shoot();
+        }
+        else if (anim.GetBool("shooting"))
+        {
+            canShootTimer -= Time.deltaTime;
+            if (canShootTimer < 0)
             {
-                rollTimer -= Time.deltaTime;
-                if (rollTimer < 0) anim.SetBool("roll", false);
+                if (!haveSmallGun) canShootTimer = 0.5f;
+                else canShootTimer = 0.2f; // Small gun takes less time to reload
+
+                if (!Input.GetKey(KeyCode.D)) anim.SetBool("shooting", false);
+                else shoot();
             }
+        }
 
-            if (canJumpTimer > 0) canJumpTimer -= Time.deltaTime;
+        // Roll
+        if (Input.GetKey(KeyCode.R))
+        {
 
-            // Check if we are grounded
-            if (!isGrounded && checkGrounded())
+            if (!anim.GetBool("jump") && !anim.GetBool("jumpRunning") && !anim.GetBool("roll") && anim.GetBool("running"))
             {
-                // Debug.Log("GROUNDING");
-                // We are grounded
-                isGrounded = true;
-                anim.SetBool("jump", false);
-                anim.SetBool("jumpRunning", false);
+                anim.SetBool("roll", true);
+                rollTimer = 2.5f;
             }
+        }
 
-            if (!anim.GetBool("shooting") && Input.GetKey(KeyCode.D))
+        if (Input.GetKey(KeyCode.S) && discoveredBigGun && changeWeaponTimer <= 0)
+        {
+            haveSmallGun = !haveSmallGun;
+            changeWeaponTimer = 0.5f;
+            if (haveSmallGun)
             {
-                anim.SetBool("shooting", true);
-                // Shoot
-                shoot();
+                weaponNameObject.text = "SHORT";
+                weaponNameImageBg.color = new Color(0f, 172f / 255f, 1f);
             }
-            else if (anim.GetBool("shooting"))
+            else
             {
-                canShootTimer -= Time.deltaTime;
-                if (canShootTimer < 0)
+                weaponNameObject.text = "LONG";
+                weaponNameImageBg.color = new Color(158f / 255f, 90f / 255f, 1f);
+            }
+        }
+
+        // BOSS LEVEL -- REALLY IMPORTANT
+        if (level == 6)
+        {
+            Vector3 golemposnoy = new Vector3(golemObject.transform.position.x, 0f, golemObject.transform.position.z);
+            Vector3 playerposnoy = new Vector3(transform.position.x, 0f, transform.position.z);
+
+            float dist = Vector3.Distance(golemposnoy, playerposnoy);
+            //Debug.Log("Distance: " + dist);
+            if (dist < 2.5)
+            {
+                if (!crashedagainstGolem)
                 {
-                    if (!haveSmallGun) canShootTimer = 0.5f;
-                    else canShootTimer = 0.2f; // Small gun takes less time to reload
-
-                    if (!Input.GetKey(KeyCode.D)) anim.SetBool("shooting", false);
-                    else shoot();
+                    if (golemObject.transform.position.z < 0) canRotateRight = false;
+                    else canRotateLeft = false;
+                    crashedagainstGolem = true;
                 }
             }
-
-            // Roll
-            if (Input.GetKey(KeyCode.R))
+            else if (crashedagainstGolem)
             {
-
-                if (!anim.GetBool("jump") && !anim.GetBool("jumpRunning") && !anim.GetBool("roll") && anim.GetBool("running"))
-                {
-                    anim.SetBool("roll", true);
-                    rollTimer = 2.5f;
-                }
-            }
-
-            if (Input.GetKey(KeyCode.S) && discoveredBigGun && changeWeaponTimer <= 0)
-            {
-                haveSmallGun = !haveSmallGun;
-                changeWeaponTimer = 0.5f;
-                if (haveSmallGun)
-                {
-                    weaponNameObject.text = "SHORT";
-                    weaponNameImageBg.color = new Color(0f, 172f / 255f, 1f);
-                }
-                else
-                {
-                    weaponNameObject.text = "LONG";
-                    weaponNameImageBg.color = new Color(158f / 255f, 90f / 255f, 1f);
-                }
-            }
-
-            // BOSS LEVEL -- REALLY IMPORTANT
-            if (level == 6)
-            {
-                Vector3 golemposnoy = new Vector3(golemObject.transform.position.x, 0f, golemObject.transform.position.z);
-                Vector3 playerposnoy = new Vector3(transform.position.x, 0f, transform.position.z);
-
-                float dist = Vector3.Distance(golemposnoy, playerposnoy);
-                //Debug.Log("Distance: " + dist);
-                if (dist < 2.5)
-                {
-                    if (!crashedagainstGolem)
-                    {
-                        if (golemObject.transform.position.z < 0) canRotateRight = false;
-                        else canRotateLeft = false;
-                        crashedagainstGolem = true;
-                    }
-                }
-                else if (crashedagainstGolem)
-                {
-                    canRotateRight = true;
-                    canRotateLeft = true;
-                    crashedagainstGolem = false;
-                }
-
+                canRotateRight = true;
+                canRotateLeft = true;
+                crashedagainstGolem = false;
             }
 
         }
@@ -259,7 +256,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.LogWarning("Collision with " + collision.gameObject.tag);
+        //Debug.Log("Collision with " + collision.gameObject.tag);
         if (collision.gameObject.tag == "Block" || collision.gameObject.tag == "Turret")
         {
             Vector3 normal = collision.contacts[0].normal;
@@ -296,13 +293,13 @@ public class Player : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Elevator"))
+        /*if (other.CompareTag("Elevator"))
         {
             if (Input.GetKey(KeyCode.Space)) {
                 onElevator = true;
             }
-        }
-        else if (other.CompareTag("Enemy-Low-HP")){
+        }*/
+        if (other.CompareTag("Enemy-Low-HP")){
             hp -= 2;
             healthSlider.value = hp / 100.0f;
             Debug.LogWarning("Collision with a trap");
@@ -325,13 +322,16 @@ public class Player : MonoBehaviour
         }
         else if (other.CompareTag("Recharge"))
         {
+            if (!other.gameObject.GetComponent<FloatingGun>().getCanTake()) return;
+
             ammo = 32;
             ammoSlider.value = ammo / 32.0f;
 
 
             counterObject.text = ammo.ToString();
 
-            Destroy(other.gameObject);
+            if (!other.gameObject.GetComponent<FloatingGun>().getIsPermanent()) Destroy(other.gameObject);
+            else other.gameObject.GetComponent<FloatingGun>().restartTempo();
 
         }
         else if (other.CompareTag("Hearts"))

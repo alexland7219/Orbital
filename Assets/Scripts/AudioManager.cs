@@ -14,6 +14,8 @@ public class AudioManager : MonoBehaviour
     public AudioSource winMusic;    // 7
     public AudioSource bossMusic;   // 8
     public AudioSource death;   // 9
+    public AudioSource rockSmash;     // 10
+    public AudioSource portalRing;   // 11
 
     public AudioSource[] audioSources;
 
@@ -23,7 +25,7 @@ public class AudioManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
 
-            audioSources = new AudioSource[10];
+            audioSources = new AudioSource[12];
             audioSources[0] = menuTheme;
             audioSources[1] = bgTheme;
             audioSources[2] = golemStep;
@@ -34,13 +36,15 @@ public class AudioManager : MonoBehaviour
             audioSources[7] = winMusic;
             audioSources[8] = bossMusic;
             audioSources[9] = death;
+            audioSources[10] = rockSmash;
+            audioSources[11] = portalRing;
 
 
             audioSources[0].Play();
 
         } 
         else {
-            audioSources = new AudioSource[8];
+            audioSources = new AudioSource[12];
             audioSources[0] = menuTheme;
             audioSources[1] = bgTheme;
             audioSources[2] = golemStep;
@@ -51,6 +55,8 @@ public class AudioManager : MonoBehaviour
             audioSources[7] = winMusic;
             audioSources[8] = bossMusic;
             audioSources[9] = death;
+            audioSources[10] = rockSmash;
+            audioSources[11] = portalRing;
 
         }
     }

@@ -4,6 +4,7 @@ using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class Boss : MonoBehaviour
 
@@ -71,10 +72,10 @@ public class Boss : MonoBehaviour
         }
 
 
-        if (!dead)
+        if (!dead && spawned)
         {
             float dist = Vector3.Distance(player.transform.position, transform.position);
-            Debug.Log(dist + " " + angle);
+            //Debug.Log(dist + " " + angle);
             if (dist > 14.5f && !anim.GetBool("Throw"))
             {
                 anim.SetBool("Throw", true);
@@ -163,8 +164,8 @@ public class Boss : MonoBehaviour
 
                 //anim.SetTrigger("GetHit");
 
-                if (shield <= 0) hp -= 100;
-                else shield -= 100;
+                if (shield <= 0) hp -= 500;
+                else shield -= 500;
 
                 if (!first && hp <= 750f) {
                     first = true;
@@ -193,6 +194,7 @@ public class Boss : MonoBehaviour
                     rotSpeed = 0;
                     dead = true;
                     anim.SetBool("Dead", true);
+                    Invoke("BackToMenu", 15.0f);
                 }
 
                 Destroy(other.gameObject);
@@ -200,16 +202,21 @@ public class Boss : MonoBehaviour
         }
     }
 
+    void BackToMenu(){
+        SceneManager.LoadScene(0);
+    }
+
     void throwRock ()
     {
-        Debug.Log("Rock thrown");
+        //Debug.Log("Rock thrown");
         Rock script = rock.GetComponent<Rock>();
         script.release();
     }
 
     void pickupRock() {
-        Debug.Log("Creating rock");
+        //Debug.Log("Creating rock");
         rock = Instantiate(rockObject, hand.transform.position, hand.transform.rotation);
+        rock.GetComponent<Rock>().audioMgr = GameObject.Find("AudioManager");
         rock.transform.localScale = new Vector3(0.0065f, 0.0065f, 0.0065f);
         rock.transform.SetParent(hand.transform);
         anim.SetBool("Throw", false);
@@ -240,8 +247,7 @@ public class Boss : MonoBehaviour
     void damageSound(){ audioMgr.GetComponent<AudioManager>().PlayAtIndex(3); }
 
     void deathSound() {
-        // S'HA DE CREAR AQUESTA FUNCIÓ
-        //audioMgr.GetComponent<AudioManager>().stopAllSounds();
+        audioMgr.GetComponent<AudioManager>().StopAtIndex(8);
         audioMgr.GetComponent<AudioManager>().PlayAtIndex(4);
     }
 
