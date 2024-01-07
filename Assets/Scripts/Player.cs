@@ -27,7 +27,7 @@ public class Player : MonoBehaviour
     public TextMeshProUGUI weaponNameObject;
     public Image weaponNameImageBg;
     public GameObject floatingGun;
-    public GameObject audioMgr;
+    private GameObject audioMgr;
 
     private Slider healthSlider;
     private Slider ammoSlider;
@@ -75,6 +75,7 @@ public class Player : MonoBehaviour
         isInsideEnemy = false;
         crashedagainstGolem = false;
         level = 0;
+        audioMgr = GameObject.Find("AudioManager");
 
         counterObject.text = "32";
     }
@@ -94,12 +95,24 @@ public class Player : MonoBehaviour
         return (transform.localScale.z > 0);
     }
 
+    void DelayDeath()
+    {
+        // Code to be executed after the delay
+        SceneManager.LoadScene(4);
+    }
+
     // Update is called once per frame
     void Update()
     {
-        if (hp <= 0) anim.SetBool("dead", true);
+        if (hp <= 0){
+            anim.SetBool("dead", true);
+            audioMgr.GetComponent<AudioManager>().StopAtIndex(1); 
+            audioMgr.GetComponent<AudioManager>().StopAtIndex(8);          
+            audioMgr.GetComponent<AudioManager>().PlayAtIndex(9);          
 
-        //SceneManager.LoadScene(4);
+            Invoke("DelayDeath", 10.0f);
+        } 
+
 
         if (!anim.GetBool("dead"))
         {

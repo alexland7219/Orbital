@@ -13,6 +13,7 @@ public class AudioManager : MonoBehaviour
     public AudioSource golemSwing;  // 6
     public AudioSource winMusic;    // 7
     public AudioSource bossMusic;   // 8
+    public AudioSource death;   // 9
 
     public AudioSource[] audioSources;
 
@@ -22,7 +23,7 @@ public class AudioManager : MonoBehaviour
             instance = this;
             DontDestroyOnLoad(gameObject);
 
-            audioSources = new AudioSource[9];
+            audioSources = new AudioSource[10];
             audioSources[0] = menuTheme;
             audioSources[1] = bgTheme;
             audioSources[2] = golemStep;
@@ -32,6 +33,7 @@ public class AudioManager : MonoBehaviour
             audioSources[6] = golemSwing;
             audioSources[7] = winMusic;
             audioSources[8] = bossMusic;
+            audioSources[9] = death;
 
 
             audioSources[0].Play();
@@ -48,6 +50,7 @@ public class AudioManager : MonoBehaviour
             audioSources[6] = golemSwing;
             audioSources[7] = winMusic;
             audioSources[8] = bossMusic;
+            audioSources[9] = death;
 
         }
     }
