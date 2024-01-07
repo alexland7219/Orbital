@@ -86,7 +86,7 @@ public class Turret : MonoBehaviour
                 // Shoot
                 Vector3 spawnPosition = lowSlice.transform.position;
                 spawnPosition.y += 0.1f;
-
+                spawnPosition.x += 0.5f;
                 GameObject bullObj;
                 bullObj = Instantiate(bulletObject, spawnPosition, transform.rotation);
 

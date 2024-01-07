@@ -9,7 +9,6 @@ public class walkingEnemy : MonoBehaviour
     public float angle;
     public float maxangle;
 
-    private float invincible;
     private float oldrotSpeed;
     private float deathTimer;
     private float stopTimer;
@@ -29,7 +28,6 @@ public class walkingEnemy : MonoBehaviour
         healthBarComponent = gameObject.transform.Find("HealthCanvas/HealthBar").gameObject.GetComponent<Health_Bar>();
         anim = GetComponent<Animator>();
         oldrotSpeed = 0;
-        invincible = 0;
         deathTimer = 2.0f;
         stopped = false;
         stopTimer = 5.0f;
@@ -45,7 +43,7 @@ public class walkingEnemy : MonoBehaviour
             //    Aqui s'aur� de posar la posicio exacta del jugador
             /////////
             
-            Debug.Log(new Vector3(-8.56129646f, 12.5699997f, 0) + " i " + transform.position);
+            //Debug.Log(new Vector3(-8.56129646f, 12.5699997f, 0) + " i " + transform.position);
             anim.SetBool("Walk", false);
             oldrotSpeed = rotSpeed;
             rotSpeed = 0;
@@ -75,21 +73,6 @@ public class walkingEnemy : MonoBehaviour
         if (hp != healthBarComponent.health) healthBarComponent.health = hp;
         if (shield != healthBarComponent.shield) healthBarComponent.shield = shield;
 
-
-        if (Input.GetKey(KeyCode.D) && invincible <= 0)
-        {
-            if (rotSpeed == 0) {
-                anim.SetBool("Walk", true);
-                rotSpeed = oldrotSpeed;
-            }
-            else {
-                anim.SetBool("Walk", false);
-                oldrotSpeed = rotSpeed;
-                rotSpeed = 0;
-            }
-            invincible = 0.5f;
-        }
-        if (invincible > 0) invincible -= Time.deltaTime;
 
         if (anim.GetBool("Death"))
         {

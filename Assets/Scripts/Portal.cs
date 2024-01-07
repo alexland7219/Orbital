@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.WSA;
+//using UnityEngine.WSA;
 
 public class Portal : MonoBehaviour
 {
@@ -15,6 +15,8 @@ public class Portal : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioMgr = GameObject.Find("AudioManager");
+
         activated = false;
         playerinside = false;
     }
@@ -27,17 +29,17 @@ public class Portal : MonoBehaviour
         Vector3 playerposnoy = new Vector3(player.transform.position.x, 0f, player.transform.position.z);
         float dist = Vector3.Distance(portalposnoy, playerposnoy);
         //Debug.Log(name + " " + !activated + " " + dist + " " + (player.GetComponent<Player>().level == 5));
-        if (!activated && dist < 7.0f && player.GetComponent<Player>().level == 5) {
+        if (!activated && dist < 7.0f && player.GetComponent<Player>().level == 2) {
             Debug.Log(name + " activating");
             partsys.Play();
             activated = true;
-            audioMgr.GetComponent<MainAudioManager>().PlayPortalRing();
+            audioMgr.GetComponent<AudioManager>().PlayAtIndex(11);
         }
 
         if (timer >= 3.0f) {
             if (playerinside) {
                 if (Input.GetKey(KeyCode.Space)) {
-                    //                                                      POSAR ALÇADA DEL NIVELL DEL BOSS
+                    //                                                      POSAR ALï¿½ADA DEL NIVELL DEL BOSS
                     player.GetComponent<Player>().level = 6;
                     player.transform.position = new Vector3(player.transform.position.x, 34.46f, player.transform.position.z);
                 }

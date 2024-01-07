@@ -4,13 +4,14 @@ using System.Security.Cryptography;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEngine.SceneManagement;
 
 public class Boss : MonoBehaviour
 
 {
     public GameObject rockObject;
     public GameObject player;
-    public GameObject audioMgr;
+    private GameObject audioMgr;
     private GameObject hand;
     private GameObject rock;
     private Animator anim;
@@ -40,7 +41,7 @@ public class Boss : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        audioMgr = GameObject.Find("AudioManager");
         hp = 1000;
         shield = 0;
         hand = GameObject.Find("RockPoint");
@@ -64,6 +65,10 @@ public class Boss : MonoBehaviour
         {
             if (playerScript.getLevel() >= level) spawned = true;
             else return;
+
+            audioMgr.GetComponent<AudioManager>().StopAtIndex(1);
+            audioMgr.GetComponent<AudioManager>().PlayAtIndex(8);
+
         }
 
 
@@ -159,8 +164,8 @@ public class Boss : MonoBehaviour
 
                 //anim.SetTrigger("GetHit");
 
-                if (shield <= 0) hp -= 100;
-                else shield -= 100;
+                if (shield <= 0) hp -= 500;
+                else shield -= 500;
 
                 if (!first && hp <= 750f) {
                     first = true;
@@ -189,11 +194,16 @@ public class Boss : MonoBehaviour
                     rotSpeed = 0;
                     dead = true;
                     anim.SetBool("Dead", true);
+                    Invoke("BackToMenu", 15.0f);
                 }
 
                 Destroy(other.gameObject);
             }
         }
+    }
+
+    void BackToMenu(){
+        SceneManager.LoadScene(0);
     }
 
     void throwRock ()
@@ -232,21 +242,20 @@ public class Boss : MonoBehaviour
 
     void unsetHit() { anim.SetBool("Hit", false); }
 
-    void stepSound() { audioMgr.GetComponent<MainAudioManager>().PlayGolemStepSound(); }
+    void stepSound() { audioMgr.GetComponent<AudioManager>().PlayGolemStepSound(); }
 
-    void damageSound(){ audioMgr.GetComponent<MainAudioManager>().PlayGolemDamageSound(); }
+    void damageSound(){ audioMgr.GetComponent<AudioManager>().PlayAtIndex(3); }
 
     void deathSound() {
-        // S'HA DE CREAR AQUESTA FUNCIÓ
-        //audioMgr.GetComponent<MainAudioManager>().stopAllSounds();
-        audioMgr.GetComponent<MainAudioManager>().PlayGolemDeathSound();
+        audioMgr.GetComponent<AudioManager>().StopAtIndex(8);
+        audioMgr.GetComponent<AudioManager>().PlayAtIndex(4);
     }
 
-    void fallSound() { audioMgr.GetComponent<MainAudioManager>().PlayGolemFallSound(); }
+    void fallSound() { audioMgr.GetComponent<AudioManager>().PlayGolemFallSound(); }
 
-    private void winMusic() { audioMgr.GetComponent<MainAudioManager>().PlayWinMusic(); }
+    private void winMusic() { audioMgr.GetComponent<AudioManager>().PlayAtIndex(7); }
 
-    private void puchSound() { audioMgr.GetComponent<MainAudioManager>().PlayGolemPunchSound(); }
+    private void puchSound() { audioMgr.GetComponent<AudioManager>().PlayAtIndex(5); }
 
-    private void swingSound() { audioMgr.GetComponent<MainAudioManager>().PlayGolemSwingSound(); }
+    private void swingSound() { audioMgr.GetComponent<AudioManager>().PlayAtIndex(6); }
 }

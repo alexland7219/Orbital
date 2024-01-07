@@ -24,6 +24,8 @@ public class Rock : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        audioMgr = GameObject.Find("AudioManager");
+
         body = GetComponent<Rigidbody>();
         hand = GameObject.Find("RockPoint");
         player = GameObject.Find("T-Pose");
@@ -77,7 +79,7 @@ public class Rock : MonoBehaviour
 
     public void die()
     {
-        audioMgr.GetComponent<MainAudioManager>().PlayRockSmashSound();
+        audioMgr.GetComponent<AudioManager>().PlayAtIndex(10);
         for (int x = 0; x < 4; ++x)
             for (int y = 0; y < 4; ++y)
                 for (int z = 0; z < 4; ++z)
