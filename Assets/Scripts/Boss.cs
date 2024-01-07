@@ -67,10 +67,10 @@ public class Boss : MonoBehaviour
         }
 
 
-        if (!dead)
+        if (!dead && spawned)
         {
             float dist = Vector3.Distance(player.transform.position, transform.position);
-            Debug.Log(dist + " " + angle);
+            //Debug.Log(dist + " " + angle);
             if (dist > 14.5f && !anim.GetBool("Throw"))
             {
                 anim.SetBool("Throw", true);
@@ -198,14 +198,15 @@ public class Boss : MonoBehaviour
 
     void throwRock ()
     {
-        Debug.Log("Rock thrown");
+        //Debug.Log("Rock thrown");
         Rock script = rock.GetComponent<Rock>();
         script.release();
     }
 
     void pickupRock() {
-        Debug.Log("Creating rock");
+        //Debug.Log("Creating rock");
         rock = Instantiate(rockObject, hand.transform.position, hand.transform.rotation);
+        rock.GetComponent<Rock>().audioMgr = GameObject.Find("AudioManager");
         rock.transform.localScale = new Vector3(0.0065f, 0.0065f, 0.0065f);
         rock.transform.SetParent(hand.transform);
         anim.SetBool("Throw", false);

@@ -11,6 +11,8 @@ public class MainAudioManager : MonoBehaviour
     public AudioSource golemPunch;
     public AudioSource golemSwing;
     public AudioSource winMusic;
+    public AudioSource rockSmash;
+    public AudioSource portalRing;
     //public AudioSource golemHit;
 
     void Start(){
@@ -51,4 +53,7 @@ public class MainAudioManager : MonoBehaviour
 
     public void PlayGolemSwingSound() { golemSwing.Play(); }
 
+    public void PlayRockSmashSound() { rockSmash.Play(); }
+
+    public void PlayPortalRing() { portalRing.Play(); }
 }

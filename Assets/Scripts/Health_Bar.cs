@@ -15,9 +15,9 @@ public class Health_Bar : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        Debug.Log("PARENT: " + gameObject.transform.parent.gameObject.transform.parent.tag);
+        //Debug.Log("PARENT: " + gameObject.transform.parent.gameObject.transform.parent.tag);
         if (gameObject.transform.parent.gameObject.transform.parent.tag == "Golem") {
-            Debug.Log("Entramos");
+            //Debug.Log("Entramos");
             shield = 0;
             health = 1000;
         }

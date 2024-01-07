@@ -1,12 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using static UnityEngine.ParticleSystem;
 
 public class Rock : MonoBehaviour
 {
+    
     Rigidbody body;
     GameObject hand;
     GameObject player;
+    public GameObject audioMgr;
     public GameObject empty;
     private bool released;
     private GameObject target;
@@ -15,6 +19,7 @@ public class Rock : MonoBehaviour
     private float minDistance;
     private bool hasarrived;
     private float timer;
+    public 
 
     // Start is called before the first frame update
     void Start()
@@ -47,6 +52,15 @@ public class Rock : MonoBehaviour
         }
     }
 
+    void OnTriggerEnter(Collider other)
+    {
+        if (released && other.CompareTag("Floor"))
+        {
+            //Debug.Log("Entro");
+            die();
+        }
+        //else Debug.Log(other.tag);
+    }
 
 
     public void release() {
@@ -63,6 +77,7 @@ public class Rock : MonoBehaviour
 
     public void die()
     {
+        audioMgr.GetComponent<MainAudioManager>().PlayRockSmashSound();
         for (int x = 0; x < 4; ++x)
             for (int y = 0; y < 4; ++y)
                 for (int z = 0; z < 4; ++z)

@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
         ammoSlider = GameObject.FindWithTag("AmmoBar").GetComponent<Slider>();
         isInsideEnemy = false;
         crashedagainstGolem = false;
-        level = 6;
+        //level = 5;
 
         counterObject.text = "32";
     }
@@ -246,7 +246,7 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
-        //Debug.LogWarning("Collision with " + collision.gameObject.tag);
+        //Debug.Log("Collision with " + collision.gameObject.tag);
         if (collision.gameObject.tag == "Block" || collision.gameObject.tag == "Turret")
         {
             Vector3 normal = collision.contacts[0].normal;
