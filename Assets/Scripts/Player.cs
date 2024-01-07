@@ -74,7 +74,7 @@ public class Player : MonoBehaviour
         ammoSlider = GameObject.FindWithTag("AmmoBar").GetComponent<Slider>();
         isInsideEnemy = false;
         crashedagainstGolem = false;
-        level = 6;
+        level = 0;
 
         counterObject.text = "32";
     }
@@ -124,7 +124,7 @@ public class Player : MonoBehaviour
                 anim.SetBool("jumpRunning", false);
             }
 
-            if (!anim.GetBool("shooting") && Input.GetKey(KeyCode.P))
+            if (!anim.GetBool("shooting") && Input.GetKey(KeyCode.D))
             {
                 anim.SetBool("shooting", true);
                 // Shoot
@@ -138,7 +138,7 @@ public class Player : MonoBehaviour
                     if (!haveSmallGun) canShootTimer = 0.5f;
                     else canShootTimer = 0.2f; // Small gun takes less time to reload
 
-                    if (!Input.GetKey(KeyCode.P)) anim.SetBool("shooting", false);
+                    if (!Input.GetKey(KeyCode.D)) anim.SetBool("shooting", false);
                     else shoot();
                 }
             }

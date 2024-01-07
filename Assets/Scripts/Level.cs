@@ -8,10 +8,15 @@ public class Level : MonoBehaviour
     public Player player; // Player is the script attached to the Player object
     private float punchTimer;
     public GameObject walls;
+    private GameObject audioMgr;
 
     // Start is called before the first frame update
     void Start()
     {
+        audioMgr = GameObject.Find("AudioManager");
+        audioMgr.GetComponent<AudioManager>().StopAtIndex(0);
+        audioMgr.GetComponent<AudioManager>().PlayAtIndex(1);
+
         if (player == null){
             player = GameObject.FindObjectOfType<Player>();
         }

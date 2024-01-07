@@ -10,10 +10,11 @@ public class MenuController : MonoBehaviour
 
     public void StartGame()
     {
-        scriptAM.stopMenuMusic();
-        Destroy(audioManager.gameObject);
+        //scriptAM.StopAtIndex(0);
+        //scriptAM.PlayAtIndex(1);
         SceneManager.LoadScene(1);
     }
+
     public void OpenCredits()
     {
         SceneManager.LoadScene(2);
