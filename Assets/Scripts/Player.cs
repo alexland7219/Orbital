@@ -46,6 +46,8 @@ public class Player : MonoBehaviour
     private float changeWeaponTimer;
 
     private bool crashedagainstGolem;
+    private bool inv = false;
+    private float invtimer = 0.0f;
 
     public int level;
 
@@ -118,6 +120,8 @@ public class Player : MonoBehaviour
         timeSinceLastDamage += Time.deltaTime;
         if (changeWeaponTimer > 0) changeWeaponTimer -= Time.deltaTime;
 
+        if (invtimer >= 0) invtimer -= Time.deltaTime;
+
         if (anim.GetBool("roll"))
         {
             rollTimer -= Time.deltaTime;
@@ -136,10 +140,9 @@ public class Player : MonoBehaviour
             anim.SetBool("jumpRunning", false);
         }
 
-        if (!anim.GetBool("shooting") && Input.GetKey(KeyCode.D))
+        if (!anim.GetBool("shooting") && Input.GetKey(KeyCode.D) && canRotateLeft && canRotateRight)
         {
             anim.SetBool("shooting", true);
-            // Shoot
             shoot();
         }
         else if (anim.GetBool("shooting"))
@@ -208,6 +211,20 @@ public class Player : MonoBehaviour
 
         }
 
+        if (Input.GetKey(KeyCode.M)){
+            audioMgr.GetComponent<AudioManager>().PlayAtIndex(13);
+
+            ammo = 32;
+            ammoSlider.value = ammo / 32.0f;
+
+
+            counterObject.text = ammo.ToString();
+        }
+
+        if (Input.GetKey(KeyCode.G) && invtimer <= 0) {
+            inv = !inv;
+            invtimer = 0.5f;
+        }
     }
 
     void shoot()
@@ -300,7 +317,11 @@ public class Player : MonoBehaviour
             }
         }*/
         if (other.CompareTag("Enemy-Low-HP")){
+            if (isInvincible()) return;
+
             hp -= 2;
+            audioMgr.GetComponent<AudioManager>().PlayAtIndex(12);          
+   
             healthSlider.value = hp / 100.0f;
             Debug.LogWarning("Collision with a trap");
         }   
@@ -323,6 +344,8 @@ public class Player : MonoBehaviour
         else if (other.CompareTag("Recharge"))
         {
             if (!other.gameObject.GetComponent<FloatingGun>().getCanTake()) return;
+
+            audioMgr.GetComponent<AudioManager>().PlayAtIndex(13);
 
             ammo = 32;
             ammoSlider.value = ammo / 32.0f;
@@ -349,6 +372,7 @@ public class Player : MonoBehaviour
             isInsideEnemy = true;
             timeSinceLastDamage = 0;
             hp -= 10;
+            audioMgr.GetComponent<AudioManager>().PlayAtIndex(12);          
             healthSlider.value = hp / 100.0f;
         }
         else if (other.CompareTag("Punch"))
@@ -358,6 +382,7 @@ public class Player : MonoBehaviour
                 isInsideEnemy = true;
                 timeSinceLastDamage = 0;
                 hp -= 20;
+                //audioMgr.GetComponent<AudioManager>().PlayAtIndex(12);          
                 healthSlider.value = hp / 100.0f;
                 Rigidbody rb = GetComponent<Rigidbody>();
                 if (other.gameObject.transform.position.z < 0) dirToGo = "punchleft";
@@ -372,6 +397,8 @@ public class Player : MonoBehaviour
                 if (!isInvincible()){
                     timeSinceLastDamage = 0f;
                     hp -= 10;
+                    audioMgr.GetComponent<AudioManager>().PlayAtIndex(12);
+
                     healthSlider.value = hp / 100.0f;
 
                 }
@@ -384,9 +411,10 @@ public class Player : MonoBehaviour
             if (!isInvincible()) {
                 timeSinceLastDamage = 0f;
                 hp -= 10;
+                //audioMgr.GetComponent<AudioManager>().PlayAtIndex(12);          
+
                 healthSlider.value = hp / 100.0f;
             }
-            Destroy(other.gameObject);
             script.die();
         }
     }
@@ -427,7 +455,13 @@ public class Player : MonoBehaviour
 
     public void releaseFromElevator(){ onElevator = false; }
 
-    public void moveInwards(int inw){ transform.Translate(directionToOrigin * inw * Time.deltaTime); }
+    public void moveInwards(int inw){ 
+        directionToOrigin = Vector3.Normalize(Vector3.zero - transform.position);
+        directionToOrigin.y = 0f;
+        directionToOrigin = Vector3.Normalize(directionToOrigin);
+
+        transform.Translate(directionToOrigin * inw * Time.deltaTime);
+    }
 
     public void centerElevator(Vector3 center) {
         onElevator = true;
@@ -451,7 +485,7 @@ public class Player : MonoBehaviour
 
     bool isInvincible()
     {
-        return anim.GetBool("roll"); // Haurem de afegir la tecla G
+        return anim.GetBool("roll") || inv; // Haurem de afegir la tecla G
     }
 
     public void changeLevel(int dif)

@@ -164,8 +164,8 @@ public class Boss : MonoBehaviour
 
                 //anim.SetTrigger("GetHit");
 
-                if (shield <= 0) hp -= 500;
-                else shield -= 500;
+                if (shield <= 0) hp -= 10;
+                else shield -= 10;
 
                 if (!first && hp <= 750f) {
                     first = true;

@@ -47,6 +47,7 @@ public class ElevatorV : MonoBehaviour
             countdownText.text = string.Format("00:{0:D2}", Mathf.RoundToInt(timeLock) % 60);
             return;
         }
+        else if (toLock && timeLock <= 0) countdownElem.SetActive(false);
 
         if (player_triggering && Input.GetKey(KeyCode.Space) && totalTime >= 0 && !started && !moving) {
             player.centerElevator(transform.position);

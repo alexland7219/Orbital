@@ -29,7 +29,7 @@ public class Portal : MonoBehaviour
         Vector3 playerposnoy = new Vector3(player.transform.position.x, 0f, player.transform.position.z);
         float dist = Vector3.Distance(portalposnoy, playerposnoy);
         //Debug.Log(name + " " + !activated + " " + dist + " " + (player.GetComponent<Player>().level == 5));
-        if (!activated && dist < 7.0f && player.GetComponent<Player>().level == 2) {
+        if (!activated && dist < 7.0f && player.GetComponent<Player>().level == 4) {
             Debug.Log(name + " activating");
             partsys.Play();
             activated = true;
@@ -41,7 +41,7 @@ public class Portal : MonoBehaviour
                 if (Input.GetKey(KeyCode.Space)) {
                     //                                                      POSAR AL�ADA DEL NIVELL DEL BOSS
                     player.GetComponent<Player>().level = 6;
-                    player.transform.position = new Vector3(player.transform.position.x, 34.46f, player.transform.position.z);
+                    player.transform.position = new Vector3(player.transform.position.x, 60.78f, player.transform.position.z);
                 }
             }
         }

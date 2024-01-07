@@ -13,10 +13,10 @@ public class ElevatorH : MonoBehaviour
     public bool moving;
     public bool started;
     public bool centered;
+    public bool startingInside;
     // Start is called before the first frame update
     void Start()
     {
-        moveInwards = 0;
         player_triggering = false;
         moving = false;
         centered = false;
@@ -56,9 +56,10 @@ public class ElevatorH : MonoBehaviour
         }
 
         if (moving){
-            Debug.LogWarning("moving");
-            transform.Translate((moveInwards * 2 - 1) * directionToOrigin * Time.deltaTime);
-            player.moveInwards(moveInwards*2 - 1);
+            Debug.Log(moveInwards);
+            if (startingInside) transform.Translate(-(moveInwards * 2 - 1) * directionToOrigin * Time.deltaTime);
+            else transform.Translate((moveInwards * 2 - 1) * directionToOrigin * Time.deltaTime);
+            player.moveInwards((moveInwards * 2 - 1));
             totalTime -= Time.deltaTime;
         }
 
